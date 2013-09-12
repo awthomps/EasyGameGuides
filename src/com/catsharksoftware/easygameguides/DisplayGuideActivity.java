@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.support.v4.app.NavUtils;
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Build;
 import com.catsharksoftware.easygameguides.R;
 
@@ -87,6 +88,7 @@ public class DisplayGuideActivity extends Activity {
 			// TODO, in the future have a text view for each paragraph
 			TextView textView = new TextView(this);
 			textView.setTextSize(16);
+			textView.setTypeface(Typeface.MONOSPACE);
 			textView.setText(text);
 			// Set the text view as the activity layout
 			layout.addView(textView);

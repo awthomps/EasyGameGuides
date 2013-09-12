@@ -2,34 +2,39 @@
 <resources>
 
     <!-- Main Activity -->
-    <string name="welcome">Welcome to Easy Game Guides!</string>
+    <string name="welcome">Welcome to Easy Game Guides!\n</string>
+    <string name="try_a_search">Search for a guide:</string>
     <string name="app_name">Easy Game Guides</string>
     <string name="action_settings">Settings</string>
-    <string name="search_message">Edit Search Query</string>
+    <string name="search_message">Edit search query</string>
     <string name="button_send">Search!</string>
     <string name="saved_guides">Saved Guides</string>
+    <string name="add_local_guide">Add a local guide!</string>
+    <string name="delete_local_guide">Delete a local guide&#8230;</string>
+    <string name="manage_local_guides">Check out your local guides:</string>
     
+    <!-- Context Menu -->
+    <string name="menu_settings">Settings</string>
+
     <!-- Display Guide Activity -->
     <string name="title_activity_display_guide">Display Guide</string>
-    
+
     <!-- Saved Guides Activity -->
     <string name="title_activity_saved_guides">Saved Guides</string>
-    
     <string name="your_local_guides">Your Local Guides:</string>
-    
+
     <!-- Display Search Activity -->
     <string name="title_activity_display_search">Search</string>
-    
+
     <!-- Add Local Guide Activity -->
     <string name="title_activity_add_local_guide">Add Local Guide</string>
-    <string name="add_local_guide">Add a local guide!</string>
     <string name="add_guide_botton">Create new guide</string>
     
+    <!-- Delete Local Guide Activity -->
+    <string name="title_activity_delete_local_guide">Delete Local Guide</string>
     
+
     <!-- Not Sure -->
-    <string name="menu_settings">Settings</string>
-    
-    
-    
+    <string name="hello_world">Hello world!</string>
 
 </resources>

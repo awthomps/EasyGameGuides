@@ -1,9 +1,11 @@
 package com.catsharksoftware.easygameguides;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -11,20 +13,42 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.support.v4.app.NavUtils;
 import android.annotation.TargetApi;
-import android.content.Intent;
+import android.content.DialogInterface;
 import android.os.Build;
-import com.catsharksoftware.easygameguides.R;
 
-public class SavedGuidesActivity extends Activity {
-	
-	public final static String NAME = "com.catsharksoftware.easygameguides.NAME";
+public class DeleteLocalGuideActivity extends Activity {
 	private ArrayList<Button> buttons;
 	private AlgorithmContainer algorithm;
+	private Button currentToBeDeleted;
+	
+	
+	/*
+	 * Create AlertDialog to prompt user whether they are sure they
+	 * want to delete a certain guide or not.
+	 */
+	private DialogInterface.OnClickListener deleteConfirm = new DialogInterface.OnClickListener()
+	{
+		@Override
+		public void onClick(DialogInterface dialog, int choice)
+		{
+			switch(choice)
+			{
+				case DialogInterface.BUTTON_POSITIVE:
+					deleteGuide();
+				break;
+				
+				case DialogInterface.BUTTON_NEGATIVE:
+					
+				break;
+			}
+		}
+	};
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_saved_guides);
+		setContentView(R.layout.activity_delete_local_guide);
 		// Show the Up button in the action bar.
 		setupActionBar();
 		
@@ -32,15 +56,17 @@ public class SavedGuidesActivity extends Activity {
 		algorithm = new AlgorithmContainer();
 		buttons = new ArrayList<Button>();
 		loadLocalGuides();
-		
+		currentToBeDeleted = null;
 	}
 	
+	/**
+	 * Load the list of local guides on the internal memory of the device
+	 */
 	private void loadLocalGuides() {
 		
-		LinearLayout layout =  (LinearLayout) findViewById(R.id.guide_list);
+		LinearLayout layout =  (LinearLayout) findViewById(R.id.delete_guide_list);
 		String listOfFiles[] = fileList();
 		
-		//TODO: Sort files before displaying
 		listOfFiles = algorithm.mergeSort(listOfFiles);	
 		
 		for(String file : listOfFiles)
@@ -51,7 +77,7 @@ public class SavedGuidesActivity extends Activity {
 				
 				@Override
 				public void onClick(View v) {
-					openGuide(v);
+					createDeleteDialog(v);
 					
 				}
 			});
@@ -60,21 +86,54 @@ public class SavedGuidesActivity extends Activity {
 		}	
 	}
 	
-	public void openGuide(View view)
+	/**
+	 * Function to call when button corresponding to a certain local guide is selected.
+	 * This prompts the user to ensure that they selected the correct guide to delete.
+	 * Takes in a view object which must be a button.
+	 * @param view
+	 */
+	public void createDeleteDialog(View view)
 	{
-		Button button = null;
 		if(view instanceof Button)
 		{
-			button = (Button) view;
+			currentToBeDeleted = (Button) view;
+			String name = (String) currentToBeDeleted.getText();
 			
-			
-			
-			//Begin the DisplayGuide Activity:
-			Intent intent = new Intent(this, DisplayGuideActivity.class);
-		    intent.putExtra(NAME,button.getText());
-		    startActivity(intent);
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setMessage("Are you sure you want to delete \"" + name + "\"")
+				.setPositiveButton("Yes", deleteConfirm)
+				.setNegativeButton("No", deleteConfirm).show();
 		}
 	}
+	
+	
+	/**
+	 * Method which actually deletes the guide from internal memory.
+	 */
+	public void deleteGuide()
+	{
+		boolean success = false;	
+		String deleteName = (String) currentToBeDeleted.getText();
+		try
+		{
+			File directory = getFilesDir();
+			File deleteFile = new File(directory, deleteName);
+			success = deleteFile.delete();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		if(success)
+		{
+			currentToBeDeleted.setText("\"" + currentToBeDeleted.getText() + "\" successfully deleted!");
+		}
+		else
+		{
+			currentToBeDeleted.setText("\"" + currentToBeDeleted.getText() + "\" could not be deleted");
+		}
+	}
+	
 
 	/**
 	 * Set up the {@link android.app.ActionBar}, if the API is available.
@@ -89,7 +148,7 @@ public class SavedGuidesActivity extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.saved_guides, menu);
+		getMenuInflater().inflate(R.menu.delete_local_guide, menu);
 		return true;
 	}
 
@@ -109,4 +168,5 @@ public class SavedGuidesActivity extends Activity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
+
 }

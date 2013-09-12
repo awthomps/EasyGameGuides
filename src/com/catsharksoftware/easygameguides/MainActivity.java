@@ -57,5 +57,10 @@ public class MainActivity extends Activity {
 		Intent intent = new Intent(this, AddLocalGuideActivity.class);
 		startActivity(intent);
 	}
+	
+	public void deleteALocalFile(View view){
+		Intent intent = new Intent(this, DeleteLocalGuideActivity.class);
+		startActivity(intent);
+	}
 
 }

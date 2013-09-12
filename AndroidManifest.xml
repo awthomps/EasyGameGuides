@@ -25,7 +25,7 @@
         <activity
             android:name="com.catsharksoftware.easygameguides.DisplayGuideActivity"
             android:label="@string/title_activity_display_guide"
-            android:parentActivityName="com.beesharp.MainActivity" >
+            android:parentActivityName="com.beesharp.easygameguides.SavedGuidesActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.beesharp.MainActivity" />
@@ -40,11 +40,21 @@
         </activity>
         <activity
             android:name="com.catsharksoftware.easygameguides.DisplaySearchActivity"
-            android:label="@string/title_activity_display_search" >
+            android:label="@string/title_activity_display_search"
+            android:parentActivityName="com.beesharp.easygameguides.MainActivity" >
         </activity>
         <activity
             android:name="com.catsharksoftware.easygameguides.AddLocalGuideActivity"
-            android:label="@string/title_activity_add_local_guide" >
+            android:label="@string/title_activity_add_local_guide"
+            android:parentActivityName="com.beesharp.MainActivity" >
+        </activity>
+        <activity
+            android:name="com.catsharksoftware.easygameguides.DeleteLocalGuideActivity"
+            android:label="@string/title_activity_delete_local_guide"
+            android:parentActivityName="com.catsharksoftware.easygameguides.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.catsharksoftware.easygameguides.MainActivity" />
         </activity>
     </application>
 
