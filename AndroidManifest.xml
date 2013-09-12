@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.catsharksoftware.easygameguides"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="8"
+        android:targetSdkVersion="17" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppBaseTheme" >
+        <activity
+            android:name="com.catsharksoftware.easygameguides.MainActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.catsharksoftware.easygameguides.DisplayGuideActivity"
+            android:label="@string/title_activity_display_guide"
+            android:parentActivityName="com.beesharp.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.beesharp.MainActivity" />
+        </activity>
+        <activity
+            android:name="com.catsharksoftware.easygameguides.SavedGuidesActivity"
+            android:label="@string/title_activity_saved_guides"
+            android:parentActivityName="com.beesharp.easygameguides.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.beesharp.easygameguides.MainActivity" />
+        </activity>
+        <activity
+            android:name="com.catsharksoftware.easygameguides.DisplaySearchActivity"
+            android:label="@string/title_activity_display_search" >
+        </activity>
+        <activity
+            android:name="com.catsharksoftware.easygameguides.AddLocalGuideActivity"
+            android:label="@string/title_activity_add_local_guide" >
+        </activity>
+    </application>
+
+</manifest>
