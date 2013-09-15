@@ -75,7 +75,7 @@ public class DisplayGuideActivity extends Activity {
 			e.printStackTrace();
 		}
 		
-		//Test the scrolling capabilities:
+		//TODO: remove this: Test the scrolling capabilities:
 		for(int i = 1; i <= 100; ++i)
 		{
 			guideText.add(""+i);
