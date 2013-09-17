@@ -6,7 +6,13 @@
 
 package com.catsharksoftware.easygameguides;
 
+import java.util.Locale;
+
+
 public class AlgorithmContainer {
+	
+	final static String[] VALID_FILES = {".txt"};
+	private Locale currentLocale = Locale.US;
 	
 	//AlgorithmContainer Constructor
 	public AlgorithmContainer()
@@ -58,7 +64,7 @@ public class AlgorithmContainer {
 					files[c] = filesA[a];
 					++a;
 				}
-				else if(filesA[a].compareTo(filesB[b]) < 0)
+				else if(filesA[a].toLowerCase(currentLocale).compareTo(filesB[b].toLowerCase(currentLocale)) < 0)
 				{
 					files[c] = filesA[a];
 					++a;
@@ -72,6 +78,23 @@ public class AlgorithmContainer {
 			}
 			return files;
 		}
+	}
+	
+	/**
+	 * Check to see if the file is one of the valid file types.
+	 * @param file
+	 * @return
+	 */
+	public boolean isCorrectFileType(String file)
+	{
+		for(String fileType : VALID_FILES)
+		{
+			if(!file.endsWith(fileType))
+			{
+				return false;
+			}
+		}
+		return true;
 	}
 
 }

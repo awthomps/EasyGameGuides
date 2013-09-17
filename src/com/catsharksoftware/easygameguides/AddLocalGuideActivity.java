@@ -10,10 +10,10 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.app.Activity;
 import android.content.Context;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.catsharksoftware.easygameguides.R;
@@ -48,38 +48,7 @@ public class AddLocalGuideActivity extends Activity {
 		return true;
 	}
 	
-	//TODO: remove this functionality of the adding of dummy files
-	public void addNewGuide(View view)
-	{
-		EditText editText = (EditText) findViewById(R.id.edit_guide_name);
-		TextView outputMessage = (TextView) findViewById(R.id.add_guide_messages);
-		
-		String fileName = editText.getText().toString();
-		String data = "EasyGG here! Testing file output!";
-		
-		if(fileName.equals("") || fileName.equals(null))
-	    {
-	    	String error = "Oops, you didn't enter anything!";
-	    	editText.setHint(error);
-	    }
-		else
-		{
-			try
-			{
-				FileOutputStream fos = openFileOutput(fileName, Context.MODE_PRIVATE);
-				fos.write(data.getBytes());
-				fos.close();
-				
-				outputMessage.setText("File \"" + fileName + "\" successfully created!");
-				
-			} 
-			catch (Exception e)
-			{
-				e.printStackTrace();
-			}
-		}
-		
-	}
+	
 	
 	private void displayDirectory()
 	{
@@ -106,45 +75,70 @@ public class AddLocalGuideActivity extends Activity {
 				fileSystem.add(sd);
 			}
 			
+			//Clear the currentDirectory View to re-populate it:
+			currentDirectory.removeAllViews();
+			
+			
 			File workingDirectory = fileSystem.get(fileSystem.size() - 1);
 			
 			TextView cDTextView = new TextView(this);
-			cDTextView.setText((String) workingDirectory.getName() + ":");
+			cDTextView.setText(directoryURL() + ":");
 			cDTextView.setTextSize(20);
 			currentDirectory.addView(cDTextView);
 			
-			//TODO: add a file button to return to the previous directory
-			
+			if(fileSystem.size() >= 2)
+			{
+				//TODO: add a file button to return to the previous directory
+				Button upADirectory = new Button(this);
+				upADirectory.setText("Back to \"" + fileSystem.get(fileSystem.size() -2).getName() + "\"");
+				upADirectory.setOnClickListener(new View.OnClickListener() {
+					public void onClick(View v)
+					{
+						//Remove current directory from the fileSystem List
+						fileSystem.remove(fileSystem.size()-1);
+						displayDirectory();
+						
+					}
+				});
+				currentDirectory.addView(upADirectory);
+			}
 			
 			File[] sdDirList = workingDirectory.listFiles();
 			String listOfFiles[] = listFileNames(sdDirList);
 			
 			for(String currentFile : listOfFiles)
 			{
-				Button b = new Button(this);
-				File fileFromList = getFileFromFileList(currentFile);
 				
-				if(fileFromList != null)
-				{
-					if(!fileFromList.isDirectory())
-					{
-						//TODO: Differentiate the files from the directories much better than how it is now
-						b.setBackgroundColor(0x88000000);
-						b.setPadding(2, 2, 2, 2);
-					}
 					
-					b.setText(currentFile);
-					b.setOnClickListener(new View.OnClickListener() {
-						@Override
-						public void onClick(View v) {
-							selectFile(v);
-						}
-					});
-					currentDirectory.addView(b);
-				}
-				else
+				File fileFromList = getFileFromFileList(currentFile);
+					
+				if(algorithm.isCorrectFileType(currentFile) || fileFromList.isDirectory())
 				{
-					reportMessage("\"" + currentFile + "\" does not exist");
+					
+					Button b = new Button(this);
+					
+					if(fileFromList != null)
+					{
+						b.setGravity(Gravity.LEFT);
+						if(!fileFromList.isDirectory())
+						{
+							//TODO: Differentiate the files from the directories much better than how it is now
+							b.setGravity(Gravity.CENTER);
+						}
+					
+						b.setText(currentFile);
+						b.setOnClickListener(new View.OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								selectFile(v);
+							}
+						});
+						currentDirectory.addView(b);
+					}
+					else
+					{
+						reportMessage("\"" + currentFile + "\" does not exist");
+					}
 				}
 			}
 			
@@ -180,7 +174,6 @@ public class AddLocalGuideActivity extends Activity {
 				else
 				{
 					fileSystem.add(selectedFile);
-					currentDirectory.removeAllViews();
 					displayDirectory();
 				}
 			}
@@ -253,7 +246,7 @@ public class AddLocalGuideActivity extends Activity {
 	}
 	
 	/**
-	 * Function to populate the string array with the file names
+	 * Function to populate the string array with the file names.
 	 * @param names
 	 * @param files
 	 */
@@ -282,5 +275,15 @@ public class AddLocalGuideActivity extends Activity {
 		currentDirectory.removeAllViews();
 		currentDirectory.addView(messageText);
 	}
-
+	
+	private String directoryURL()
+	{
+		String dirURL = "";
+		for(int i = 0; i < fileSystem.size(); ++i)
+		{
+			dirURL += fileSystem.get(i).getName() + "/";
+		}
+		
+		return dirURL;
+	}
 }

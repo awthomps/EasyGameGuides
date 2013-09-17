@@ -8,24 +8,11 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:orientation="vertical"
     tools:context=".AddLocalGuideActivity" >
-<LinearLayout android:id="@+id/current_directory"
+    
+	<LinearLayout android:id="@+id/current_directory"
     	android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
 	    android:orientation="vertical" >
-	    
-	    <EditText android:id="@+id/edit_guide_name"
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:hint="@string/add_local_guide" />
-	    <Button
-    	    android:text="@string/add_guide_botton"
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
- 	       android:onClick="addNewGuide" />
-    	<TextView android:id="@+id/add_guide_messages"
-        	android:textIsSelectable = "true"
-      	 	android:layout_width="match_parent"
-       		android:layout_height="wrap_content" />
     	
     </LinearLayout>
     
