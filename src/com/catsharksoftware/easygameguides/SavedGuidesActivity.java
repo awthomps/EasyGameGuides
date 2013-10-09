@@ -21,6 +21,7 @@ public class SavedGuidesActivity extends Activity {
 	public final static String LOADING_FILE = "Loading file...";
 	private ArrayList<Button> buttons;
 	private AlgorithmContainer algorithm;
+	private String accessedGuide = "";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +35,20 @@ public class SavedGuidesActivity extends Activity {
 		buttons = new ArrayList<Button>();
 		loadLocalGuides();
 		
+	}
+	
+	protected void onResume()
+	{
+		super.onResume();
+		for(Button button : buttons)
+		{
+			String name = (String) button.getText();
+			if(name.equals(LOADING_FILE))
+			{
+				button.setText(accessedGuide);
+				break;
+			}
+		}
 	}
 	
 	private void loadLocalGuides() {
@@ -68,12 +83,12 @@ public class SavedGuidesActivity extends Activity {
 		{
 			button = (Button) view;
 			
-			String fileName = (String) button.getText();
+			accessedGuide = (String) button.getText();
 			button.setText(LOADING_FILE);
 			
 			//Begin the DisplayGuide Activity:
 			Intent intent = new Intent(this, DisplayGuideActivity.class);
-		    intent.putExtra(NAME,fileName);
+		    intent.putExtra(NAME, accessedGuide);
 		    startActivity(intent);
 		}
 	}
