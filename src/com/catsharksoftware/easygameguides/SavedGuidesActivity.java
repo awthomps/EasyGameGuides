@@ -18,6 +18,7 @@ import com.catsharksoftware.easygameguides.R;
 public class SavedGuidesActivity extends Activity {
 	
 	public final static String NAME = "com.catsharksoftware.easygameguides.NAME";
+	public final static String LOADING_FILE = "Loading file...";
 	private ArrayList<Button> buttons;
 	private AlgorithmContainer algorithm;
 
@@ -67,11 +68,12 @@ public class SavedGuidesActivity extends Activity {
 		{
 			button = (Button) view;
 			
-			
+			String fileName = (String) button.getText();
+			button.setText(LOADING_FILE);
 			
 			//Begin the DisplayGuide Activity:
 			Intent intent = new Intent(this, DisplayGuideActivity.class);
-		    intent.putExtra(NAME,button.getText());
+		    intent.putExtra(NAME,fileName);
 		    startActivity(intent);
 		}
 	}

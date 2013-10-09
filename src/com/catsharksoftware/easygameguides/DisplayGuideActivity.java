@@ -21,6 +21,7 @@ import com.catsharksoftware.easygameguides.R;
 public class DisplayGuideActivity extends Activity {
 	
 	private LinearLayout layout;
+	private String guideName;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -29,8 +30,8 @@ public class DisplayGuideActivity extends Activity {
 		
 		// Get the message from the intent
 		Intent intent = getIntent();
-		String name = intent.getStringExtra(SavedGuidesActivity.NAME);
-		setTitle(name);
+		guideName = intent.getStringExtra(SavedGuidesActivity.NAME);
+		setTitle(guideName);
 		
 		setContentView(R.layout.activity_display_guide);
 		// Show the Up button in the action bar.
@@ -45,9 +46,11 @@ public class DisplayGuideActivity extends Activity {
 		{
 			e.printStackTrace();
 		}
-		loadFile(name);
-		 
+		
+		loadFile(guideName); 
 	}
+	
+
 
 	private void loadFile(String name) {
 		/*
@@ -75,11 +78,35 @@ public class DisplayGuideActivity extends Activity {
 			e.printStackTrace();
 		}
 		
-		//TODO: remove this: Test the scrolling capabilities:
-		for(int i = 1; i <= 100; ++i)
+		for(int i = 0; i < guideText.size(); ++i)
 		{
-			guideText.add(""+i);
+			try
+			{
+			// Create the text view
+			// TODO, in the future have a text view for each paragraph
+			TextView textView = new TextView(this);
+			textView.setTextSize(16);
+			textView.setPadding(0,0,0,15);
+			textView.setTypeface(Typeface.MONOSPACE);
+			
+			String text = "";
+			while( !guideText.get(i).equals("") && i < guideText.size())
+			{
+				text += guideText.get(i);
+				++i;
+			}
+			
+			textView.setText(text);
+			// Set the text view as the activity layout
+			layout.addView(textView);
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
 		}
+		
+		/*
 		for(String text : guideText)
 		{
 			try
@@ -97,7 +124,7 @@ public class DisplayGuideActivity extends Activity {
 			{
 				e.printStackTrace();
 			}
-		}
+		}*/
 	}
 
 	/**
