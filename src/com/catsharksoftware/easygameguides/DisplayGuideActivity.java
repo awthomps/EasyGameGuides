@@ -29,6 +29,7 @@ public class DisplayGuideActivity extends Activity {
 	private LinearLayout layout;
 	private ArrayList<View> guideTextViews;
 	private String guideName;
+	private int guideIndex, textBlockIndex;
 	
 	private boolean isFirstTime;
 	
@@ -59,6 +60,8 @@ public class DisplayGuideActivity extends Activity {
 			e.printStackTrace();
 		}
 		
+		guideIndex = 0;
+		textBlockIndex = 0;
 		isFirstTime = true;
 		
 		setUpSearch(false);
@@ -108,6 +111,17 @@ public class DisplayGuideActivity extends Activity {
 				@Override
 				public void onClick(View v) {
 					//TODO: set up searching
+					
+					//Find the searchBar again
+					EditText searchBar = (EditText) findViewById(R.id.search_bar);
+					if(searchBar.getText().equals(""))
+					{
+						searchBar.setText("Please enter nonempty query");
+					}
+					else
+					{
+						searchGuide(searchBar, false);
+					}
 				}
 			});
 			
@@ -118,11 +132,19 @@ public class DisplayGuideActivity extends Activity {
 				@Override
 				public void onClick(View v) {
 					//TODO: set up searching
+					
+					//Find the searchBar again
+					EditText searchBar = (EditText) findViewById(R.id.search_bar);
+					if(searchBar.getText().equals(""))
+					{
+						searchBar.setText("Please enter nonempty query");
+					}
+					else
+					{
+						searchGuide(searchBar, true);
+					}
 				}
 			});
-			
-			//The search bar
-			searchBar.setHint("Search guide");
 			
 			isFirstTime = false;
 		}
@@ -143,8 +165,100 @@ public class DisplayGuideActivity extends Activity {
 			hide.setVisibility(View.VISIBLE);
 			prevWord.setVisibility(View.VISIBLE);
 			nextWord.setVisibility(View.VISIBLE);
+			
+			//The search bar
+			searchBar.setHint("Search guide");
 			searchBar.setVisibility(View.VISIBLE);
+			
 		}
+	}
+	
+	/**
+	 * Find the next instance of whatever is contained in the EditText view
+	 * @param searchBar
+	 * @param forward
+	 * @return
+	 */
+	private void searchGuide(EditText searchBar, boolean forward)
+	{	
+		//private ArrayList<View> guideTextViews;
+		//private int guideIndex;
+		//private int textBlockIndex;
+		
+		String query = searchBar.getText().toString().toLowerCase(AlgorithmContainer.CURRENT_LOCALE);
+		ScrollView scrollBar = (ScrollView) findViewById(R.id.scroll_bar);
+		
+		while(guideIndex >= 0 && guideIndex < guideTextViews.size())
+		{
+			View view = guideTextViews.get(guideIndex);
+			TextView block = null;
+			String textBlock = null;
+			
+			if(view instanceof TextView)
+			{
+				block = (TextView) view;
+			}
+			else
+			{
+				searchBar.setHint("An error has occurred");
+				return;
+			}
+			
+			textBlock = (String) block.getText().toString().toLowerCase(AlgorithmContainer.CURRENT_LOCALE);
+			
+			
+			//Search the given block of text
+			while(textBlockIndex < textBlock.length())
+			{
+				textBlockIndex = textBlock.indexOf(query,textBlockIndex);
+				if(textBlockIndex == -1)
+				{
+					textBlockIndex = 0;
+					break;
+				}
+				else
+				{
+					int loc[] = {0,1};
+					block.getLocationInWindow(loc);
+					scrollBar.scrollTo(loc[0],loc[1]);
+					if(forward)
+					{	searchBar.clearFocus();
+						block.requestFocus(View.FOCUS_DOWN);
+						return;
+					}
+					else
+					{
+						searchBar.clearFocus();
+						block.requestFocus(View.FOCUS_UP);
+						return;
+					}
+					
+				}
+			}
+			textBlockIndex = 0;
+			if(forward)
+			{
+				++guideIndex;
+			}
+			else
+			{
+				--guideIndex;
+			}
+		}
+		if(guideIndex >= guideTextViews.size() || guideIndex < 0)
+		{
+			searchBar.setText("Reached end for \"" + query + "\"");
+			if(forward)
+			{
+				guideIndex = 0;
+			}
+			else
+			{
+				guideIndex = guideTextViews.size() - 1;
+			}
+		}
+		
+		return;
 	}
 
 
@@ -207,6 +321,8 @@ public class DisplayGuideActivity extends Activity {
 			}
 		}
 	}
+	
+
 
 	/**
 	 * Set up the {@link android.app.ActionBar}, if the API is available.

@@ -12,7 +12,7 @@ import java.util.Locale;
 public class AlgorithmContainer {
 	
 	final static String[] VALID_FILES = {".txt"};
-	private Locale currentLocale = Locale.US;
+	final static Locale CURRENT_LOCALE = Locale.US;
 	
 	//AlgorithmContainer Constructor
 	public AlgorithmContainer()
@@ -64,7 +64,7 @@ public class AlgorithmContainer {
 					files[c] = filesA[a];
 					++a;
 				}
-				else if(filesA[a].toLowerCase(currentLocale).compareTo(filesB[b].toLowerCase(currentLocale)) < 0)
+				else if(filesA[a].toLowerCase(CURRENT_LOCALE).compareTo(filesB[b].toLowerCase(CURRENT_LOCALE)) < 0)
 				{
 					files[c] = filesA[a];
 					++a;
