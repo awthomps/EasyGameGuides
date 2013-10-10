@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.support.v4.app.NavUtils;
 import android.annotation.TargetApi;
@@ -25,9 +26,12 @@ import com.catsharksoftware.easygameguides.R;
 public class DisplayGuideActivity extends Activity {
 	
 	private LinearLayout searchView;
-	private ListView layout;
+	private LinearLayout layout;
 	private ArrayList<View> guideTextViews;
 	private String guideName;
+	
+	private boolean isFirstTime;
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +50,7 @@ public class DisplayGuideActivity extends Activity {
 		//Initialize layout
 		try
 		{
-			layout = (ListView) findViewById(R.id.guide_text);
+			layout = (LinearLayout) findViewById(R.id.guide_text);
 			searchView = (LinearLayout) findViewById(R.id.search_in_guide);
 			guideTextViews = new ArrayList<View>();
 		}
@@ -54,6 +58,9 @@ public class DisplayGuideActivity extends Activity {
 		{
 			e.printStackTrace();
 		}
+		
+		isFirstTime = true;
+		
 		setUpSearch(false);
 		loadFile(guideName); 
 	}
@@ -63,12 +70,18 @@ public class DisplayGuideActivity extends Activity {
 	 */
 
 	private void setUpSearch(boolean bringUpSearch) {
-		searchView.removeAllViewsInLayout();
-		//TODO: fix the problem views that show guide not displaying anymore
 		
-		if(!bringUpSearch)
+		Button openSearch = (Button) findViewById(R.id.open_search);
+		Button hide = (Button) findViewById(R.id.hide);
+		Button prevWord = (Button) findViewById(R.id.prev_word);
+		Button nextWord = (Button) findViewById(R.id.next_word);
+		EditText searchBar = (EditText) findViewById(R.id.search_bar);
+		
+		
+		//If first time this is called, initiate setup
+		if(isFirstTime)
 		{
-			Button openSearch = new Button(this);
+			//open search button
 			openSearch.setText("Search this guide");
 			openSearch.setOnClickListener(new View.OnClickListener() {
 				
@@ -77,12 +90,8 @@ public class DisplayGuideActivity extends Activity {
 				setUpSearch(true);
 				}
 			});
-			searchView.addView(openSearch);
-		}
-		else
-		{
-			//Hide the search bar
-			Button hide = new Button(this);
+			
+			//hide text button
 			hide.setText("^");
 			hide.setOnClickListener(new View.OnClickListener() {
 				
@@ -91,10 +100,8 @@ public class DisplayGuideActivity extends Activity {
 					setUpSearch(false);
 				}
 			});
-			searchView.addView(hide);
 			
-			//The back button
-			Button prevWord = new Button(this);
+			//The previous button
 			prevWord.setText("<");
 			prevWord.setOnClickListener(new View.OnClickListener() {
 				
@@ -103,10 +110,8 @@ public class DisplayGuideActivity extends Activity {
 					//TODO: set up searching
 				}
 			});
-			searchView.addView(prevWord);
 			
 			//The forward button
-			Button nextWord = new Button(this);
 			nextWord.setText(">");
 			nextWord.setOnClickListener(new View.OnClickListener() {
 				
@@ -115,13 +120,30 @@ public class DisplayGuideActivity extends Activity {
 					//TODO: set up searching
 				}
 			});
-			searchView.addView(nextWord);
 			
 			//The search bar
-			EditText searchBar = new EditText(this);
 			searchBar.setHint("Search guide");
-			searchView.addView(searchBar);
 			
+			isFirstTime = false;
+		}
+		
+		
+		if(!bringUpSearch)
+		{
+			openSearch.setVisibility(View.VISIBLE);
+			hide.setVisibility(View.GONE);
+			prevWord.setVisibility(View.GONE);
+			nextWord.setVisibility(View.GONE);
+			searchBar.setVisibility(View.GONE);
+		}
+		else
+		{
+			//hide openSearch
+			openSearch.setVisibility(View.GONE);
+			hide.setVisibility(View.VISIBLE);
+			prevWord.setVisibility(View.VISIBLE);
+			nextWord.setVisibility(View.VISIBLE);
+			searchBar.setVisibility(View.VISIBLE);
 		}
 	}
 

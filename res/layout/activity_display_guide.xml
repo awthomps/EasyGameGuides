@@ -5,7 +5,7 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingTop="2sp"
     android:orientation="vertical"
     tools:context=".DisplayGuideActivity" >
     
@@ -13,13 +13,37 @@
               android:layout_width="fill_parent" 
               android:layout_height="wrap_content" 
               android:orientation="horizontal" >
+              
+        <Button android:id="@+id/open_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <Button android:id="@+id/hide"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <Button android:id="@+id/prev_word"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <Button android:id="@+id/next_word"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <EditText android:id="@+id/search_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent" />
 	</LinearLayout>
     
-    <ListView android:id="@+id/guide_text"
+    <ScrollView 
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical" >
-    </ListView>
+        
+        <LinearLayout android:id="@+id/guide_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+            
+        </LinearLayout>
+        
+    </ScrollView>
     
 
 </LinearLayout>
