@@ -9,7 +9,7 @@
     android:orientation="vertical"
     tools:context=".DisplayGuideActivity" >
     
-    <LinearLayout android:id="@+id/search_in_guide"
+    <LinearLayout android:id="@+id/guide_toolbar"
               android:layout_width="fill_parent" 
               android:layout_height="wrap_content" 
               android:orientation="horizontal" >
@@ -17,9 +17,18 @@
         <Button android:id="@+id/open_search"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
+        <Button android:id="@+id/open_nav"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <Button android:id="@+id/open_bookmarks"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        
         <Button android:id="@+id/hide"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
+        
+        
         <Button android:id="@+id/prev_word"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
@@ -29,6 +38,27 @@
         <EditText android:id="@+id/search_bar"
             android:layout_width="wrap_content"
             android:layout_height="fill_parent" />
+        
+        <Button android:id="@+id/up_guide"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <Button android:id="@+id/down_guide"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        
+        <TextView android:id="@+id/num_of_marks"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <Button android:id="@+id/prev_mark"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <Button android:id="@+id/make_mark"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <Button android:id="@+id/next_mark"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        
 	</LinearLayout>
     
     <ScrollView android:id="@+id/scroll_bar"

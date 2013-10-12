@@ -24,22 +24,30 @@ public final class R {
         public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
-        public static final int action_settings=0x7f08000f;
+        public static final int action_settings=0x7f080017;
         public static final int current_directory=0x7f080000;
         public static final int delete_guide_list=0x7f080001;
-        public static final int edit_head=0x7f08000c;
-        public static final int edit_message=0x7f08000d;
-        public static final int guide_list=0x7f08000e;
-        public static final int guide_text=0x7f080009;
-        public static final int hide=0x7f080004;
-        public static final int llTitle=0x7f08000b;
-        public static final int next_word=0x7f080006;
+        public static final int down_guide=0x7f08000b;
+        public static final int edit_head=0x7f080014;
+        public static final int edit_message=0x7f080015;
+        public static final int guide_list=0x7f080016;
+        public static final int guide_text=0x7f080011;
+        public static final int guide_toolbar=0x7f080002;
+        public static final int hide=0x7f080006;
+        public static final int llTitle=0x7f080013;
+        public static final int make_mark=0x7f08000e;
+        public static final int next_mark=0x7f08000f;
+        public static final int next_word=0x7f080008;
+        public static final int num_of_marks=0x7f08000c;
+        public static final int open_bookmarks=0x7f080005;
+        public static final int open_nav=0x7f080004;
         public static final int open_search=0x7f080003;
-        public static final int prev_word=0x7f080005;
-        public static final int scroll_bar=0x7f080008;
-        public static final int search_bar=0x7f080007;
-        public static final int search_in_guide=0x7f080002;
-        public static final int search_layout=0x7f08000a;
+        public static final int prev_mark=0x7f08000d;
+        public static final int prev_word=0x7f080007;
+        public static final int scroll_bar=0x7f080010;
+        public static final int search_bar=0x7f080009;
+        public static final int search_layout=0x7f080012;
+        public static final int up_guide=0x7f08000a;
     }
     public static final class layout {
         public static final int activity_add_local_guide=0x7f030000;

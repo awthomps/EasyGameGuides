@@ -25,7 +25,7 @@ import com.catsharksoftware.easygameguides.R;
 
 public class DisplayGuideActivity extends Activity {
 	
-	private LinearLayout searchView;
+	private LinearLayout toolbar;
 	private LinearLayout layout;
 	private ArrayList<View> guideTextViews;
 	private String guideName;
@@ -52,7 +52,7 @@ public class DisplayGuideActivity extends Activity {
 		try
 		{
 			layout = (LinearLayout) findViewById(R.id.guide_text);
-			searchView = (LinearLayout) findViewById(R.id.search_in_guide);
+			toolbar = (LinearLayout) findViewById(R.id.guide_toolbar);
 			guideTextViews = new ArrayList<View>();
 		}
 		catch(Exception e)
@@ -64,7 +64,7 @@ public class DisplayGuideActivity extends Activity {
 		textBlockIndex = 0;
 		isFirstTime = true;
 		
-		setUpSearch(false);
+		setupToolbar(false, false, false);
 		loadFile(guideName); 
 	}
 	
@@ -72,13 +72,31 @@ public class DisplayGuideActivity extends Activity {
 	 * set up the search functionality for the game guide
 	 */
 
-	private void setUpSearch(boolean bringUpSearch) {
+	private void setupToolbar(boolean bringUpSearch, boolean bringUpNav, boolean bringUpBookmarks) {
 		
+		//toolbar openers
 		Button openSearch = (Button) findViewById(R.id.open_search);
+		Button openNav = (Button) findViewById(R.id.open_nav);
+		Button openBookmarks = (Button) findViewById(R.id.open_bookmarks);
+		
+		//toolbar hider
 		Button hide = (Button) findViewById(R.id.hide);
+		
+		//searh toolbar
 		Button prevWord = (Button) findViewById(R.id.prev_word);
 		Button nextWord = (Button) findViewById(R.id.next_word);
 		EditText searchBar = (EditText) findViewById(R.id.search_bar);
+		
+		
+		//integrate navigation and bookmarks
+		Button upGuide = (Button) findViewById(R.id.up_guide);
+		Button downGuide = (Button) findViewById(R.id.down_guide);
+		
+		TextView numMarks = (TextView) findViewById(R.id.num_of_marks);
+		Button prevMark = (Button) findViewById(R.id.prev_mark);
+		Button makeMark = (Button) findViewById(R.id.make_mark);
+		Button nextMark = (Button) findViewById(R.id.next_mark);
+		
 		
 		
 		//If first time this is called, initiate setup
@@ -90,17 +108,39 @@ public class DisplayGuideActivity extends Activity {
 				
 				@Override
 				public void onClick(View v) {
-				setUpSearch(true);
+				setupToolbar(true, false, false);
 				}
 			});
 			
-			//hide text button
-			hide.setText("^");
+			//open navigation button
+			//TODO: setup navigation functionality (divide the guide into ten parts and go up and down the guide ten percent)
+			openNav.setText("Navigate this guide");
+			openNav.setOnClickListener(new View.OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+				setupToolbar(false, true, false);
+				}
+			});
+			
+			//open bookmarks button
+			//TODO: setup bookmarks functionality (save the scroll location of a desired bookmark to local memory)
+			openBookmarks.setText("Bookmarks");
+			openBookmarks.setOnClickListener(new View.OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+				setupToolbar(false, false, true);
+				}
+			});
+			
+			//hide bar button
+			hide.setText("Hide");
 			hide.setOnClickListener(new View.OnClickListener() {
 				
 				@Override
 				public void onClick(View v) {
-					setUpSearch(false);
+					setupToolbar(false, false, false);
 				}
 			});
 			
@@ -153,15 +193,28 @@ public class DisplayGuideActivity extends Activity {
 		if(!bringUpSearch)
 		{
 			openSearch.setVisibility(View.VISIBLE);
+			openNav.setVisibility(View.VISIBLE);
+			openBookmarks.setVisibility(View.VISIBLE);
+			
 			hide.setVisibility(View.GONE);
 			prevWord.setVisibility(View.GONE);
 			nextWord.setVisibility(View.GONE);
 			searchBar.setVisibility(View.GONE);
+			
+			upGuide.setVisibility(View.GONE);
+			downGuide.setVisibility(View.GONE);
+			
+			numMarks.setVisibility(View.GONE);
+			prevMark.setVisibility(View.GONE);
+			makeMark.setVisibility(View.GONE);
+			nextMark.setVisibility(View.GONE);
 		}
 		else
 		{
 			//hide openSearch
 			openSearch.setVisibility(View.GONE);
+			openNav.setVisibility(View.GONE);
+			openBookmarks.setVisibility(View.GONE);
 			hide.setVisibility(View.VISIBLE);
 			prevWord.setVisibility(View.VISIBLE);
 			nextWord.setVisibility(View.VISIBLE);
