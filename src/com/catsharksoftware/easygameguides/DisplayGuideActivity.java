@@ -103,7 +103,7 @@ public class DisplayGuideActivity extends Activity {
 		if(isFirstTime)
 		{
 			//open search button
-			openSearch.setText("Search this guide");
+			openSearch.setText("Search");
 			openSearch.setOnClickListener(new View.OnClickListener() {
 				
 				@Override
@@ -114,7 +114,7 @@ public class DisplayGuideActivity extends Activity {
 			
 			//open navigation button
 			//TODO: setup navigation functionality (divide the guide into ten parts and go up and down the guide ten percent)
-			openNav.setText("Navigate this guide");
+			openNav.setText("Navigate");
 			openNav.setOnClickListener(new View.OnClickListener() {
 				
 				@Override
@@ -186,12 +186,124 @@ public class DisplayGuideActivity extends Activity {
 				}
 			});
 			
+			
+			//The up page button
+			upGuide.setText("Up ^");
+			upGuide.setOnClickListener(new View.OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					//TODO: set up searching
+					
+				}
+			});
+			
+			//The down page button
+			downGuide.setText("Down v");
+			downGuide.setOnClickListener(new View.OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					//TODO: set up searching
+					
+				}
+			});
+			
+			
+			
+			//The number of bookmarks page button
+			numMarks.setText("Number");
+			numMarks.setOnClickListener(new View.OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					//TODO: set up searching
+					
+				}
+			});
+			
+			//Go back a bookmark button
+			prevMark.setText("<");
+			prevMark.setOnClickListener(new View.OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					//TODO: set up searching
+					
+				}
+			});
+			
+			
+			//set current scrollview scrollTo to this bookmark
+			makeMark.setText("Save location as bookmark");
+			makeMark.setOnClickListener(new View.OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					//TODO: set up searching
+					
+				}
+			});
+			//Go to next boormark button
+			nextMark.setText("next >");
+			nextMark.setOnClickListener(new View.OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					//TODO: set up searching
+					
+				}
+			});
+			
 			isFirstTime = false;
 		}
 		
 		
-		if(!bringUpSearch)
+		if(bringUpSearch)
 		{
+			//hide toolbar menu
+			openSearch.setVisibility(View.GONE);
+			openNav.setVisibility(View.GONE);
+			openBookmarks.setVisibility(View.GONE);
+			hide.setVisibility(View.VISIBLE);
+			
+			//Bring up the search toolbar
+			prevWord.setVisibility(View.VISIBLE);
+			nextWord.setVisibility(View.VISIBLE);
+			
+			//The search bar
+			searchBar.setHint("Search guide");
+			searchBar.setVisibility(View.VISIBLE);
+		}
+		else if(bringUpNav)
+		{
+			//hide toolbar menu
+			openSearch.setVisibility(View.GONE);
+			openNav.setVisibility(View.GONE);
+			openBookmarks.setVisibility(View.GONE);
+			hide.setVisibility(View.VISIBLE);
+			
+			//bring up navigation bar
+			upGuide.setVisibility(View.VISIBLE);
+			downGuide.setVisibility(View.VISIBLE);
+		}
+		else if(bringUpBookmarks)
+		{
+			//hide toolbar menu
+			openSearch.setVisibility(View.GONE);
+			hide.setVisibility(View.VISIBLE);
+			openNav.setVisibility(View.GONE);
+			openBookmarks.setVisibility(View.GONE);
+			
+			//bring up bookmarks bar
+			numMarks.setVisibility(View.VISIBLE);
+			prevMark.setVisibility(View.VISIBLE);
+			makeMark.setVisibility(View.VISIBLE);
+			nextMark.setVisibility(View.VISIBLE);
+		}
+		else
+		{
+			//Bring up the regular toolbar menu
 			openSearch.setVisibility(View.VISIBLE);
 			openNav.setVisibility(View.VISIBLE);
 			openBookmarks.setVisibility(View.VISIBLE);
@@ -208,21 +320,6 @@ public class DisplayGuideActivity extends Activity {
 			prevMark.setVisibility(View.GONE);
 			makeMark.setVisibility(View.GONE);
 			nextMark.setVisibility(View.GONE);
-		}
-		else
-		{
-			//hide openSearch
-			openSearch.setVisibility(View.GONE);
-			openNav.setVisibility(View.GONE);
-			openBookmarks.setVisibility(View.GONE);
-			hide.setVisibility(View.VISIBLE);
-			prevWord.setVisibility(View.VISIBLE);
-			nextWord.setVisibility(View.VISIBLE);
-			
-			//The search bar
-			searchBar.setHint("Search guide");
-			searchBar.setVisibility(View.VISIBLE);
-			
 		}
 	}
 	
