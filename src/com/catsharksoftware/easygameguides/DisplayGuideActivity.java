@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.support.v4.app.NavUtils;
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Build;
 import com.catsharksoftware.easygameguides.R;
@@ -32,6 +33,7 @@ public class DisplayGuideActivity extends Activity {
 	private int guideIndex, textBlockIndex;
 	
 	private boolean isFirstTime;
+	private int sessionScrollLocation;
 	
 
 	@Override
@@ -64,8 +66,57 @@ public class DisplayGuideActivity extends Activity {
 		textBlockIndex = 0;
 		isFirstTime = true;
 		
+		
+		/*
+		 * TODO: get this to work so that when the orientation changes, the scroll is not lost
+		 * 
+		 * get sessionScrollLocation if it has been saved from a previous
+		 * instance of this particular activity
+		 */
+		
+		@SuppressWarnings("deprecation")
+		final Object location = getLastNonConfigurationInstance();
+		if(location != null && (location instanceof Integer))
+		{
+			sessionScrollLocation = (Integer) location;
+		}
+		else
+		{
+			sessionScrollLocation = 0;
+		}
+		
 		setupToolbar(false, false, false);
 		loadFile(guideName); 
+	}
+	
+	/**
+	 * activity resumes
+	 * scrolls to the last location the user was in the ScrollView
+	 */
+	public void onResume(Bundle savedInstanceState)
+	{
+		ScrollView scrollBar = (ScrollView) findViewById(R.id.scroll_bar);
+		scrollBar.scrollTo(0, sessionScrollLocation);
+	}
+	
+	/**
+	 * activity pauses
+	 * saves the last location the user was in the ScrollView
+	 */
+	public void onPause(Bundle savedInstanceState)
+	{
+		ScrollView scrollBar = (ScrollView) findViewById(R.id.scroll_bar);
+		sessionScrollLocation = scrollBar.getScrollY();
+	}
+	
+	/**
+	 * onRetainNonConfigurationInstance
+	 * saves current scroll location if activity is killed.
+	 */
+	public Object onRetainNonConfigurationInstance()
+	{
+		final int location = sessionScrollLocation;
+		return location;
 	}
 	
 	/**

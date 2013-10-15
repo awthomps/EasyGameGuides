@@ -25,28 +25,28 @@
         <activity
             android:name="com.catsharksoftware.easygameguides.DisplayGuideActivity"
             android:label="@string/title_activity_display_guide"
-            android:parentActivityName="com.beesharp.easygameguides.SavedGuidesActivity" >
+            android:parentActivityName="com.catsharksoftware.easygameguides.SavedGuidesActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.beesharp.MainActivity" />
+                android:value="com.catsharksoftware.MainActivity" />
         </activity>
         <activity
             android:name="com.catsharksoftware.easygameguides.SavedGuidesActivity"
             android:label="@string/title_activity_saved_guides"
-            android:parentActivityName="com.beesharp.easygameguides.MainActivity" >
+            android:parentActivityName="com.catsharksoftware.easygameguides.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.beesharp.easygameguides.MainActivity" />
+                android:value="com.catsharksoftware.easygameguides.MainActivity" />
         </activity>
         <activity
             android:name="com.catsharksoftware.easygameguides.DisplaySearchActivity"
             android:label="@string/title_activity_display_search"
-            android:parentActivityName="com.beesharp.easygameguides.MainActivity" >
+            android:parentActivityName="com.catsharksoftware.easygameguides.MainActivity" >
         </activity>
         <activity
             android:name="com.catsharksoftware.easygameguides.AddLocalGuideActivity"
             android:label="@string/title_activity_add_local_guide"
-            android:parentActivityName="com.beesharp.MainActivity" >
+            android:parentActivityName="com.catsharksoftware.easygameguides.MainActivity" >
         </activity>
         <activity
             android:name="com.catsharksoftware.easygameguides.DeleteLocalGuideActivity"
