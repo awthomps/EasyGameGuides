@@ -24,13 +24,12 @@ public final class R {
         public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
-        public static final int action_settings=0x7f080017;
+        public static final int action_settings=0x7f080016;
         public static final int current_directory=0x7f080000;
         public static final int delete_guide_list=0x7f080001;
         public static final int down_guide=0x7f08000b;
         public static final int edit_head=0x7f080014;
-        public static final int edit_message=0x7f080015;
-        public static final int guide_list=0x7f080016;
+        public static final int guide_list=0x7f080015;
         public static final int guide_text=0x7f080011;
         public static final int guide_toolbar=0x7f080002;
         public static final int hide=0x7f080006;

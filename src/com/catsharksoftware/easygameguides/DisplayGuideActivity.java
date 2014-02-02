@@ -355,8 +355,10 @@ public class DisplayGuideActivity extends Activity {
 		else
 		{
 			//Bring up the regular toolbar menu
+			/* Hide non funtional features
 			openSearch.setVisibility(View.VISIBLE);
 			openNav.setVisibility(View.VISIBLE);
+			*/
 			openBookmarks.setVisibility(View.VISIBLE);
 			
 			hide.setVisibility(View.GONE);
