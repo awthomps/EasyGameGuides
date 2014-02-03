@@ -286,7 +286,7 @@ public class DisplayGuideActivity extends Activity {
 			
 			
 			//set current scrollview scrollTo to this bookmark
-			makeMark.setText("Save location as bookmark");
+			makeMark.setText("Bookmark location");
 			makeMark.setOnClickListener(new View.OnClickListener() {
 				
 				@Override
@@ -355,10 +355,9 @@ public class DisplayGuideActivity extends Activity {
 		else
 		{
 			//Bring up the regular toolbar menu
-			/* Hide non funtional features
-			openSearch.setVisibility(View.VISIBLE);
-			openNav.setVisibility(View.VISIBLE);
-			*/
+			// Hide non funtional features
+			openSearch.setVisibility(View.GONE);
+			openNav.setVisibility(View.GONE);
 			openBookmarks.setVisibility(View.VISIBLE);
 			
 			hide.setVisibility(View.GONE);

@@ -168,7 +168,7 @@ public class AddLocalGuideActivity extends Activity {
 					}
 					else
 					{
-						b.setText(b.getText() + "has been successfully added!");
+						b.setText(b.getText() + " has been successfully added!");
 					}
 				}
 				else
