@@ -263,7 +263,8 @@ public class DisplayGuideActivity extends Activity {
 			
 			
 			//The number of bookmarks page button
-			numMarks.setText("Number");
+			ScrollView scrollBar = (ScrollView) findViewById(R.id.scroll_bar);
+			numMarks.setText(""+scrollBar.getMaxScrollAmount());
 			numMarks.setOnClickListener(new View.OnClickListener() {
 				
 				@Override
@@ -286,7 +287,7 @@ public class DisplayGuideActivity extends Activity {
 			
 			
 			//set current scrollview scrollTo to this bookmark
-			makeMark.setText("Bookmark location");
+			makeMark.setText("Bookmark here");
 			makeMark.setOnClickListener(new View.OnClickListener() {
 				
 				@Override
@@ -473,54 +474,22 @@ public class DisplayGuideActivity extends Activity {
 		 * 
 		 * 
 		 */	
-		ArrayList<String> guideText = new ArrayList<String>();
+		TextView textView = new TextView(this);
+		FileInputStream guide;
+		Thread fileLoader;
 		try
 		{
-			FileInputStream guide = openFileInput(name);
-			BufferedReader fileReader = new BufferedReader(new InputStreamReader(guide));
-			String line = null;
-			while((line = fileReader.readLine()) != null)
-			{
-				guideText.add(line);
-			}
-			fileReader.close();
-			guide.close();
+			guide = openFileInput(name);
+			fileLoader = new Thread(new FileLoader(name, textView, guide, layout));
+			guideTextViews.add(textView);
+			fileLoader.start();
 		}
 		catch(Exception e)
 		{
 			e.printStackTrace();
-		}
-		
-		for(int i = 0; i < guideText.size(); ++i)
-		{
-			try
-			{
-			// Create the text view
-			// TODO, in the future have a text view for each paragraph
-			TextView textView = new TextView(this);
-			textView.setTextSize(16);
-			textView.setPadding(0,0,0,15);
-			textView.setFocusable(true);
-			textView.setTypeface(Typeface.MONOSPACE);
-			
-			String text = "";
-			while( !guideText.get(i).equals("") && i < guideText.size())
-			{
-				text += guideText.get(i);
-				++i;
-			}
-			
-			textView.setText(text);
-			
-			// Set the text view as the activity layout
+			textView.setText("Oh no! there was an error!");
 			layout.addView(textView);
 			guideTextViews.add(textView);
-			
-			}
-			catch(Exception e)
-			{
-				e.printStackTrace();
-			}
 		}
 	}
 	
