@@ -27,10 +27,11 @@ import com.catsharksoftware.easygameguides.R;
 public class DisplayGuideActivity extends Activity {
 	
 	private LinearLayout toolbar;
-	private LinearLayout layout;
+	private LinearLayout layout, infoDisplay;
 	private ArrayList<View> guideTextViews;
 	private String guideName;
 	private int guideIndex, textBlockIndex;
+	private TextView pageLoc;
 	
 	private boolean isFirstTime;
 	private int sessionScrollLocation;
@@ -55,6 +56,7 @@ public class DisplayGuideActivity extends Activity {
 		{
 			layout = (LinearLayout) findViewById(R.id.guide_text);
 			toolbar = (LinearLayout) findViewById(R.id.guide_toolbar);
+			infoDisplay = (LinearLayout) findViewById(R.id.info_bar);
 			guideTextViews = new ArrayList<View>();
 		}
 		catch(Exception e)
@@ -86,9 +88,10 @@ public class DisplayGuideActivity extends Activity {
 		}
 		
 		setupToolbar(false, false, false);
-		loadFile(guideName); 
+		loadFile(guideName);
+		setupInfoDisplay();
 	}
-	
+
 	/**
 	 * activity resumes
 	 * scrolls to the last location the user was in the ScrollView
@@ -525,6 +528,28 @@ public class DisplayGuideActivity extends Activity {
 	}
 	
 
+	
+	private void setupInfoDisplay() {
+		final Activity thisActivity = this;
+		final ScrollView scrollBar = (ScrollView) findViewById(R.id.scroll_bar);
+		TextView test = new TextView(this);
+		test.setText("%0");
+		infoDisplay.addView(test);
+	    new Thread(new Runnable() {
+	        public void run() {
+	            final TextView percentDisplay = new TextView(thisActivity);
+	            infoDisplay.addView(percentDisplay);
+	            percentDisplay.post(new Runnable() {
+	                public void run() {
+	                    while(true)
+	                    {
+	                    	percentDisplay.setText("%" + ((double) scrollBar.getScrollY())/scrollBar.getMaxScrollAmount());
+	                    }
+	                }
+	            });
+	        }
+	    }).start();	
+	}
 
 	/**
 	 * Set up the {@link android.app.ActionBar}, if the API is available.
