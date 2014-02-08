@@ -56,6 +56,22 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.catsharksoftware.easygameguides.MainActivity" />
         </activity>
+        <activity
+            android:name="com.catsharksoftware.easygameguides.HowToUseActivity"
+            android:label="@string/title_activity_how_to_use"
+            android:parentActivityName="com.catsharksoftware.easygameguides.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.catsharksoftware.easygameguides.MainActivity" />
+        </activity>
+        <activity
+            android:name="com.catsharksoftware.easygameguides.AboutActivity"
+            android:label="@string/title_activity_about"
+            android:parentActivityName="com.catsharksoftware.easygameguides.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.catsharksoftware.easygameguides.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

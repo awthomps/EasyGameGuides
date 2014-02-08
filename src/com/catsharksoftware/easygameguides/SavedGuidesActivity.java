@@ -22,6 +22,7 @@ public class SavedGuidesActivity extends Activity {
 	private ArrayList<Button> buttons;
 	private AlgorithmContainer algorithm;
 	private String accessedGuide = "";
+	private boolean openLock;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +35,7 @@ public class SavedGuidesActivity extends Activity {
 		algorithm = new AlgorithmContainer();
 		buttons = new ArrayList<Button>();
 		loadLocalGuides();
-		
+		openLock = false; //boolean to make sure only one guide can be opened
 	}
 	
 	protected void onResume()
@@ -49,6 +50,7 @@ public class SavedGuidesActivity extends Activity {
 				break;
 			}
 		}
+		openLock = false;
 	}
 	
 	private void loadLocalGuides() {
@@ -67,7 +69,12 @@ public class SavedGuidesActivity extends Activity {
 				
 				@Override
 				public void onClick(View v) {
-					openGuide(v);
+					//make sure only one guide can be opened at a time
+					if(!openLock)
+					{
+						openGuide(v);
+						openLock = true;
+					}
 					
 				}
 			});

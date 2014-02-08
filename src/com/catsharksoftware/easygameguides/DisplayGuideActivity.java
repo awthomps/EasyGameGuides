@@ -29,6 +29,7 @@ public class DisplayGuideActivity extends Activity {
 	private LinearLayout toolbar;
 	private LinearLayout layout, infoDisplay;
 	private ArrayList<View> guideTextViews;
+	private ScrollView scrollBar;
 	private String guideName;
 	private int guideIndex, textBlockIndex;
 	private TextView pageLoc;
@@ -57,6 +58,8 @@ public class DisplayGuideActivity extends Activity {
 			layout = (LinearLayout) findViewById(R.id.guide_text);
 			toolbar = (LinearLayout) findViewById(R.id.guide_toolbar);
 			infoDisplay = (LinearLayout) findViewById(R.id.info_bar);
+			infoDisplay.setVisibility(View.GONE); //does not update percentage so hide
+			scrollBar = (ScrollView) findViewById(R.id.scroll_bar);
 			guideTextViews = new ArrayList<View>();
 		}
 		catch(Exception e)
@@ -89,7 +92,7 @@ public class DisplayGuideActivity extends Activity {
 		
 		setupToolbar(false, false, false);
 		loadFile(guideName);
-		setupInfoDisplay();
+		//setupInfoDisplay();
 	}
 
 	/**
@@ -98,7 +101,6 @@ public class DisplayGuideActivity extends Activity {
 	 */
 	public void onResume(Bundle savedInstanceState)
 	{
-		ScrollView scrollBar = (ScrollView) findViewById(R.id.scroll_bar);
 		scrollBar.scrollTo(0, sessionScrollLocation);
 	}
 	
@@ -247,7 +249,8 @@ public class DisplayGuideActivity extends Activity {
 				
 				@Override
 				public void onClick(View v) {
-					//TODO: set up searching
+					scrollBy(-10);
+					
 					
 				}
 			});
@@ -258,8 +261,7 @@ public class DisplayGuideActivity extends Activity {
 				
 				@Override
 				public void onClick(View v) {
-					//TODO: set up searching
-					
+					scrollBy(10);
 				}
 			});
 			
@@ -299,7 +301,7 @@ public class DisplayGuideActivity extends Activity {
 				}
 			});
 			//Go to next boormark button
-			nextMark.setText("next >");
+			nextMark.setText(">");
 			nextMark.setOnClickListener(new View.OnClickListener() {
 				
 				@Override
@@ -360,8 +362,8 @@ public class DisplayGuideActivity extends Activity {
 			//Bring up the regular toolbar menu
 			// Hide non funtional features
 			openSearch.setVisibility(View.GONE);
-			openNav.setVisibility(View.GONE);
-			openBookmarks.setVisibility(View.VISIBLE);
+			openNav.setVisibility(View.VISIBLE);
+			openBookmarks.setVisibility(View.GONE);
 			
 			hide.setVisibility(View.GONE);
 			prevWord.setVisibility(View.GONE);
@@ -391,7 +393,6 @@ public class DisplayGuideActivity extends Activity {
 		//private int textBlockIndex;
 		
 		String query = searchBar.getText().toString().toLowerCase(AlgorithmContainer.CURRENT_LOCALE);
-		ScrollView scrollBar = (ScrollView) findViewById(R.id.scroll_bar);
 		
 		while(guideIndex >= 0 && guideIndex < guideTextViews.size())
 		{
@@ -507,7 +508,7 @@ public class DisplayGuideActivity extends Activity {
 			textView.setTypeface(Typeface.MONOSPACE);
 			
 			String text = "";
-			while( !guideText.get(i).equals("") && i < guideText.size())
+			while(i < guideText.size() && !guideText.get(i).equals(""))
 			{
 				text += guideText.get(i);
 				++i;
@@ -543,12 +544,41 @@ public class DisplayGuideActivity extends Activity {
 	                public void run() {
 	                    while(true)
 	                    {
-	                    	percentDisplay.setText("%" + ((double) scrollBar.getScrollY())/scrollBar.getMaxScrollAmount());
+	                    	percentDisplay.setText("%" + ((double) scrollBar.getScrollY())/scrollBar.getChildAt(0).getHeight());
 	                    }
 	                }
 	            });
 	        }
 	    }).start();	
+	}
+	
+	private void scrollBy(double amount) {
+		//scrollBar.computeScroll();
+		double currentScroll = scrollBar.getScrollY();
+		double maxScroll = scrollBar.getChildAt(0).getHeight();//.getMaxScrollAmount();
+		double fractionLoc = currentScroll/maxScroll;
+		
+		//check if under %amount
+		if(amount < 0 && (fractionLoc * 100.0 < -amount))
+		{
+			scrollBar.scrollTo(scrollBar.getScrollX(), 0);
+			//scrollBar.scrollBy(0, (int) (amount/maxScroll));
+		}
+		else if(amount > 0 && (100.0 - (fractionLoc*100.0)) < amount )
+		{
+			scrollBar.scrollTo(scrollBar.getScrollX(), (int)maxScroll);
+			//scrollBar.scrollBy(0, (int) (amount/maxScroll));
+		}
+		else
+		{
+			int newLocation = (int) (currentScroll + (amount*maxScroll/100));
+			scrollBar.scrollTo(scrollBar.getScrollX(), newLocation);
+			//scrollBar.scrollBy(0,(int)amount);
+		}
+		
+		TextView maxScrollV = new TextView(this);
+        infoDisplay.addView(maxScrollV);
+        //maxScrollV.setText("       "+maxScroll);
 	}
 
 	/**

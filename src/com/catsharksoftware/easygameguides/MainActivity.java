@@ -63,5 +63,13 @@ public class MainActivity extends Activity {
 		Intent intent = new Intent(this, DeleteLocalGuideActivity.class);
 		startActivity(intent);
 	}
+	public void displayHowTo(View view){
+		Intent intent = new Intent(this, HowToUseActivity.class);
+		startActivity(intent);
+	}
+	public void displayAbout(View view){
+		Intent intent = new Intent(this, AboutActivity.class);
+		startActivity(intent);
+	}
 
 }

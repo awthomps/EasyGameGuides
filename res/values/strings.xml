@@ -12,7 +12,7 @@
     <string name="add_local_guide">Add a local guide!</string>
     <string name="delete_local_guide">Delete a local guide&#8230;</string>
     <string name="manage_local_guides">Check out your local guides:</string>
-    
+
     <!-- Context Menu -->
     <string name="menu_settings">Settings</string>
 
@@ -29,12 +29,15 @@
     <!-- Add Local Guide Activity -->
     <string name="title_activity_add_local_guide">Add Local Guide</string>
     <string name="add_guide_botton">Create new guide</string>
-    
+
     <!-- Delete Local Guide Activity -->
     <string name="title_activity_delete_local_guide">Delete Local Guide</string>
-    
 
     <!-- Not Sure -->
     <string name="hello_world">Hello world!</string>
+    <string name="title_activity_how_to_use">How To Use</string>
+    <string name="get_to_how_to">&quot;How do I use this?&quot;</string>
+    <string name="title_activity_about">About Activity</string>
+    <string name="get_to_about">About this App</string>
 
 </resources>

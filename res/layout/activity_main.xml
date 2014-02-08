@@ -53,5 +53,13 @@
 			android:layout_height="wrap_content"
 			android:text="@string/delete_local_guide"
 			android:onClick="deleteALocalFile" />
+		<Button android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:text="@string/get_to_how_to"
+			android:onClick="displayHowTo" />
+		<Button android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:text="@string/get_to_about"
+			android:onClick="displayAbout" />
 	</LinearLayout>
 </ScrollView>
