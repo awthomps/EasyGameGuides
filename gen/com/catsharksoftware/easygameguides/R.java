@@ -25,12 +25,13 @@ public final class R {
     }
     public static final class id {
         public static final int about_text=0x7f080000;
-        public static final int action_settings=0x7f080019;
+        public static final int action_settings=0x7f08001a;
         public static final int current_directory=0x7f080001;
         public static final int delete_guide_list=0x7f080002;
         public static final int down_guide=0x7f08000c;
         public static final int edit_head=0x7f080017;
-        public static final int guide_list=0x7f080018;
+        public static final int file_receive_info=0x7f080018;
+        public static final int guide_list=0x7f080019;
         public static final int guide_text=0x7f080013;
         public static final int guide_toolbar=0x7f080003;
         public static final int help_text=0x7f080015;
@@ -59,7 +60,8 @@ public final class R {
         public static final int activity_display_search=0x7f030004;
         public static final int activity_how_to_use=0x7f030005;
         public static final int activity_main=0x7f030006;
-        public static final int activity_saved_guides=0x7f030007;
+        public static final int activity_receive_file=0x7f030007;
+        public static final int activity_saved_guides=0x7f030008;
     }
     public static final class menu {
         public static final int about=0x7f070000;
@@ -69,7 +71,8 @@ public final class R {
         public static final int display_search=0x7f070004;
         public static final int how_to_use=0x7f070005;
         public static final int main=0x7f070006;
-        public static final int saved_guides=0x7f070007;
+        public static final int receive_file=0x7f070007;
+        public static final int saved_guides=0x7f070008;
     }
     public static final class string {
         public static final int action_settings=0x7f050003;
@@ -103,6 +106,7 @@ public final class R {
          */
         public static final int title_activity_display_search=0x7f05000e;
         public static final int title_activity_how_to_use=0x7f050013;
+        public static final int title_activity_receive_file=0x7f050017;
         /**  Saved Guides Activity 
          */
         public static final int title_activity_saved_guides=0x7f05000c;

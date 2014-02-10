@@ -39,5 +39,6 @@
     <string name="get_to_how_to">&quot;How do I use this?&quot;</string>
     <string name="title_activity_about">About Activity</string>
     <string name="get_to_about">About this App</string>
+    <string name="title_activity_receive_file">Receive File</string>
 
 </resources>

@@ -72,6 +72,19 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.catsharksoftware.easygameguides.MainActivity" />
         </activity>
+        <activity
+            android:name="com.catsharksoftware.easygameguides.ReceiveFileActivity"
+            android:label="@string/title_activity_receive_file"
+            android:parentActivityName="com.catsharksoftware.easygameguides.SavedGuidesActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.catsharksoftware.easygameguides.SavedGuidesActivity" />
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="file/*"/>
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
