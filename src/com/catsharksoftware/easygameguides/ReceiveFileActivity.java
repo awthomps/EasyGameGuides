@@ -6,6 +6,8 @@ import android.app.Activity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.support.v4.app.NavUtils;
 import android.annotation.TargetApi;
@@ -14,6 +16,9 @@ import android.os.Build;
 
 public class ReceiveFileActivity extends Activity {
 
+	private LinearLayout buttonArray;
+	private TextView infoText;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -22,7 +27,8 @@ public class ReceiveFileActivity extends Activity {
 		setupActionBar();
 		
 		//Get info display
-		TextView infoText = (TextView) findViewById(R.id.file_receive_info);
+		infoText = (TextView) findViewById(R.id.file_receive_info);
+		buttonArray = (LinearLayout) findViewById(R.id.file_receive_button_array);
 		infoText.setTextSize(20);
 		
 		
@@ -31,9 +37,17 @@ public class ReceiveFileActivity extends Activity {
 		String action = intent.getAction();
 		String type = intent.getType();
 		
-		if(Intent.ACTION_SEND.equals(action) && type != null) {
+		if(Intent.ACTION_VIEW.equals(action) && type != null) {
 			if("text/plain".equals(type)) {
+				infoText.setText("Text file received!\n Open now?");
+				runDecision(intent);
 				handleSendText(intent);
+				TextView test = new TextView(this);
+				test.setWidth(buttonArray.getWidth());
+				buttonArray.addView(test);
+				/*TODO: figure out how to get the text data from the intent
+				String textUri = intent.getStringExtra(Intent.EXTRA_TEXT);
+				test.setText(textUri);*/
 			}
 		}
 		else if(Intent.ACTION_MAIN.equals(action)){
@@ -41,6 +55,31 @@ public class ReceiveFileActivity extends Activity {
 			infoText.setText("No text file was shared. Return to" +"" +
 		    "main menu or exit app.");
 		}
+	}
+
+	private void runDecision(Intent intent) {
+		Button yesButton = new Button(this);
+		yesButton.setWidth(buttonArray.getWidth());
+		yesButton.setHeight(20);
+		yesButton.setText("YES!");
+		buttonArray.addView(yesButton);
+		yesButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				
+			}
+		});
+		Button noButton = new Button(this);
+		noButton.setWidth(buttonArray.getWidth());
+		noButton.setHeight(20);
+		noButton.setText("No thanks, not right now...");
+		buttonArray.addView(noButton);
+		noButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				
+			}
+		});
 	}
 
 	private void handleSendText(Intent intent) {

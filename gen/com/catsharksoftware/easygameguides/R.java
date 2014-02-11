@@ -25,13 +25,14 @@ public final class R {
     }
     public static final class id {
         public static final int about_text=0x7f080000;
-        public static final int action_settings=0x7f08001a;
+        public static final int action_settings=0x7f08001b;
         public static final int current_directory=0x7f080001;
         public static final int delete_guide_list=0x7f080002;
         public static final int down_guide=0x7f08000c;
         public static final int edit_head=0x7f080017;
+        public static final int file_receive_button_array=0x7f080019;
         public static final int file_receive_info=0x7f080018;
-        public static final int guide_list=0x7f080019;
+        public static final int guide_list=0x7f08001a;
         public static final int guide_text=0x7f080013;
         public static final int guide_toolbar=0x7f080003;
         public static final int help_text=0x7f080015;
