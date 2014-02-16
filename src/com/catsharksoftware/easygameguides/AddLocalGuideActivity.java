@@ -104,44 +104,52 @@ public class AddLocalGuideActivity extends Activity {
 			}
 			
 			File[] sdDirList = workingDirectory.listFiles();
-			String listOfFiles[] = listFileNames(sdDirList);
-			
-			for(String currentFile : listOfFiles)
-			{
-				
-					
-				File fileFromList = getFileFromFileList(currentFile);
-					
-				if(algorithm.isCorrectFileType(currentFile) || fileFromList.isDirectory())
+			if(sdDirList == null) {
+				TextView error = new TextView(this);
+				error.setTextSize(20);
+				error.setText("Some devices don't respond well to adding files in this file explorer. " +
+						"Try sharing from another application");
+				currentDirectory.removeAllViews();
+				currentDirectory.addView(error);
+			}
+			else {
+				String listOfFiles[] = listFileNames(sdDirList);
+				for(String currentFile : listOfFiles)
 				{
 					
-					Button b = new Button(this);
-					
-					if(fileFromList != null)
+						
+					File fileFromList = getFileFromFileList(currentFile);
+						
+					if(algorithm.isCorrectFileType(currentFile) || fileFromList.isDirectory())
 					{
-						b.setGravity(Gravity.LEFT);
-						if(!fileFromList.isDirectory())
+						
+						Button b = new Button(this);
+						
+						if(fileFromList != null)
 						{
-							//TODO: Differentiate the files from the directories much better than how it is now
-							b.setGravity(Gravity.CENTER);
-						}
-					
-						b.setText(currentFile);
-						b.setOnClickListener(new View.OnClickListener() {
-							@Override
-							public void onClick(View v) {
-								selectFile(v);
+							b.setGravity(Gravity.LEFT);
+							if(!fileFromList.isDirectory())
+							{
+								//TODO: Differentiate the files from the directories much better than how it is now
+								b.setGravity(Gravity.CENTER);
 							}
-						});
-						currentDirectory.addView(b);
-					}
-					else
-					{
-						reportMessage("\"" + currentFile + "\" does not exist");
+						
+							b.setText(currentFile);
+							b.setOnClickListener(new View.OnClickListener() {
+								@Override
+								public void onClick(View v) {
+									selectFile(v);
+								}
+							});
+							currentDirectory.addView(b);
+						}
+						else
+						{
+							reportMessage("\"" + currentFile + "\" does not exist");
+						}
 					}
 				}
 			}
-			
 		}
 	}
 	

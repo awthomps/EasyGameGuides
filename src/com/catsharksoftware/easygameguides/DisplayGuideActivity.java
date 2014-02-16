@@ -509,43 +509,45 @@ public class DisplayGuideActivity extends Activity {
 				}
 					
 				
-				
-				for(int i = 0; i < guideText.size(); ++i)
-				{
-					try
-					{
-						// Create the text view
-						// String text = "";
-						while(i < guideText.size() && !guideText.get(i).equals(""))
-						{
-							//text += guideText.get(i);
-							final int percent = (int) (((double) (i * 100))/ ((double) guideText.size()));
-							final String lineOfText = guideText.get(i);
-							TextView lineOfTextView = new TextView(thisContext);
-							lineOfTextView.setTextSize(16);
-							lineOfTextView.setText(lineOfText);
-							lineOfTextView.setFocusable(true);
-							lineOfTextView.setTypeface(Typeface.MONOSPACE);
-							
-							//Add Guide to data structure
-							guideTextViews.add(lineOfTextView);
-							layout.post(new Runnable() {
-								public void run() {
-									TextView lineOfTextView = new TextView(thisContext);
-									lineOfTextView.setTextSize(16);
-									lineOfTextView.setText(lineOfText);
-									lineOfTextView.setFocusable(true);
-									lineOfTextView.setTypeface(Typeface.MONOSPACE);
-									loadingView.setText("Loading %" + percent + "\nPlease wait a few moments...");
-									layout.addView(lineOfTextView);
-								}
-							});
-							++i;
-						}
+				String currentText = "";
+				int lineCounter = 0;
+				for(int i = 0; i < guideText.size(); ++i) {
+					currentText += guideText.get(i);
+					if((lineCounter < 10000) && !guideText.get(i).equals("") && (i < guideText.size()-1) ){
+						++lineCounter;
 					}
-					catch(Exception e)
-					{
-						e.printStackTrace();
+					else {
+						try {
+							// Every 10 lines, Create the text view
+								//text += guideText.get(i);
+								final int percent = (int) (((double) (i * 100))/ ((double) guideText.size()));
+								final String lineOfText = currentText;
+								TextView lineOfTextView = new TextView(thisContext);
+								lineOfTextView.setTextSize(16);
+								lineOfTextView.setText(lineOfText);
+								lineOfTextView.setFocusable(true);
+								lineOfTextView.setTypeface(Typeface.MONOSPACE);
+								
+								//Add Guide to data structure
+								guideTextViews.add(lineOfTextView);
+								layout.post(new Runnable() {
+									public void run() {
+										TextView lineOfTextView = new TextView(thisContext);
+										lineOfTextView.setTextSize(16);
+										lineOfTextView.setText(lineOfText);
+										lineOfTextView.setFocusable(true);
+										lineOfTextView.setTypeface(Typeface.MONOSPACE);
+										loadingView.setText("Loading %" + percent + "\nPlease wait a few moments...");
+										layout.addView(lineOfTextView);
+									}
+								});
+						}
+						catch(Exception e)
+						{
+							e.printStackTrace();
+						}
+						currentText = "";
+						lineCounter = 0;
 					}
 				}
 				layout.post(new Runnable() {
