@@ -18,6 +18,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.support.v4.app.NavUtils;
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -469,7 +470,7 @@ public class DisplayGuideActivity extends Activity {
 
 
 
-	private void loadFile(String name) {
+	private void loadFile(final String name) {
 		/*
 		 * TODO:
 		 * Tutorial for reading/displaying text in a file:
@@ -477,55 +478,83 @@ public class DisplayGuideActivity extends Activity {
 		 * 
 		 * 
 		 */	
-		ArrayList<String> guideText = new ArrayList<String>();
-		try
-		{
-			FileInputStream guide = openFileInput(name);
-			BufferedReader fileReader = new BufferedReader(new InputStreamReader(guide));
-			String line = null;
-			while((line = fileReader.readLine()) != null)
-			{
-				guideText.add(line);
-			}
-			fileReader.close();
-			guide.close();
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
+		final Context thisContext = this;
 		
-		for(int i = 0; i < guideText.size(); ++i)
-		{
-			try
-			{
-			// Create the text view
-			// TODO, in the future have a text view for each paragraph
-			TextView textView = new TextView(this);
-			textView.setTextSize(16);
-			textView.setPadding(0,0,0,15);
-			textView.setFocusable(true);
-			textView.setTypeface(Typeface.MONOSPACE);
-			
-			String text = "";
-			while(i < guideText.size() && !guideText.get(i).equals(""))
-			{
-				text += guideText.get(i);
-				++i;
+		final String loading = "Please wait, loading guide \"" + name + "\"...";
+		final TextView loadingView = new TextView(this);
+		loadingView.setTextSize(24);
+		loadingView.setPadding(0,0,0,15);
+		loadingView.setFocusable(true);
+		loadingView.setText(loading);
+		layout.addView(loadingView);
+		
+		new Thread(new Runnable() {
+			final ArrayList<String> guideText = new ArrayList<String>();
+			public void run() {
+				try
+				{
+					FileInputStream guide = openFileInput(name);
+					BufferedReader fileReader = new BufferedReader(new InputStreamReader(guide));
+					String line = null;
+					while((line = fileReader.readLine()) != null)
+					{
+						guideText.add(line);
+					}
+					fileReader.close();
+					guide.close();
+					}
+				catch(Exception e)
+				{
+					e.printStackTrace();
+				}
+					
+				
+				
+				for(int i = 0; i < guideText.size(); ++i)
+				{
+					try
+					{
+						// Create the text view
+						// String text = "";
+						while(i < guideText.size() && !guideText.get(i).equals(""))
+						{
+							//text += guideText.get(i);
+							final int percent = (int) (((double) (i * 100))/ ((double) guideText.size()));
+							final String lineOfText = guideText.get(i);
+							TextView lineOfTextView = new TextView(thisContext);
+							lineOfTextView.setTextSize(16);
+							lineOfTextView.setText(lineOfText);
+							lineOfTextView.setFocusable(true);
+							lineOfTextView.setTypeface(Typeface.MONOSPACE);
+							
+							//Add Guide to data structure
+							guideTextViews.add(lineOfTextView);
+							layout.post(new Runnable() {
+								public void run() {
+									TextView lineOfTextView = new TextView(thisContext);
+									lineOfTextView.setTextSize(16);
+									lineOfTextView.setText(lineOfText);
+									lineOfTextView.setFocusable(true);
+									lineOfTextView.setTypeface(Typeface.MONOSPACE);
+									loadingView.setText("Loading %" + percent + "\nPlease wait a few moments...");
+									layout.addView(lineOfTextView);
+								}
+							});
+							++i;
+						}
+					}
+					catch(Exception e)
+					{
+						e.printStackTrace();
+					}
+				}
+				layout.post(new Runnable() {
+					public void run() {
+						layout.removeView(loadingView);
+					}
+				});
 			}
-			
-			textView.setText(text);
-			
-			// Set the text view as the activity layout
-			layout.addView(textView);
-			guideTextViews.add(textView);
-			
-			}
-			catch(Exception e)
-			{
-				e.printStackTrace();
-			}
-		}
+		}).start();
 	}
 	
 
