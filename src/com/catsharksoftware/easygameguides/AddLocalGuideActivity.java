@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.app.Activity;
@@ -59,7 +60,7 @@ public class AddLocalGuideActivity extends Activity {
 		 * http://stackoverflow.com/questions/5751335/using-file-listfiles-with-filenameextensionfilter
 		 */
 		
-		String externalState = Environment.getExternalStorageState();
+		String externalState = Environment.getExternalStorageState();;
 		
 		if(!externalState.equals(Environment.MEDIA_MOUNTED) && !externalState.equals(Environment.MEDIA_MOUNTED_READ_ONLY)) {
 			//External media could not be found

@@ -171,7 +171,7 @@ public class DisplayGuideActivity extends Activity {
 			
 			//open navigation button
 			//TODO: setup navigation functionality (divide the guide into ten parts and go up and down the guide ten percent)
-			openNav.setText("Navigate");
+			openNav.setText("Quick-Nav");
 			openNav.setOnClickListener(new View.OnClickListener() {
 				
 				@Override
@@ -530,15 +530,11 @@ public class DisplayGuideActivity extends Activity {
 								
 								//Add Guide to data structure
 								guideTextViews.add(lineOfTextView);
+								
 								layout.post(new Runnable() {
 									public void run() {
-										TextView lineOfTextView = new TextView(thisContext);
-										lineOfTextView.setTextSize(16);
-										lineOfTextView.setText(lineOfText);
-										lineOfTextView.setFocusable(true);
-										lineOfTextView.setTypeface(Typeface.MONOSPACE);
-										loadingView.setText("Loading %" + percent + "\nPlease wait a few moments...");
-										layout.addView(lineOfTextView);
+										//loadingView.setText("Loading %" + percent + "\nPlease wait a few moments...");
+										loadingView.setText("Loading guide...\nPlease wait a few moments...");
 									}
 								});
 						}
@@ -550,11 +546,21 @@ public class DisplayGuideActivity extends Activity {
 						lineCounter = 0;
 					}
 				}
+				//remove
+				
+				final LinearLayout guideLayout = new LinearLayout(thisContext);
+				guideLayout.setOrientation(LinearLayout.VERTICAL);
+				
+				
+				for(View currentView : guideTextViews) {
+					guideLayout.addView(currentView);
+				}
 				layout.post(new Runnable() {
-					public void run() {
-						layout.removeView(loadingView);
-					}
-				});
+				public void run() {
+					layout.addView(guideLayout);
+					layout.removeView(loadingView);
+				}
+			});
 			}
 		}).start();
 	}
