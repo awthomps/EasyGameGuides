@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.http.util.ByteArrayBuffer;
 
@@ -40,8 +42,12 @@ public class WebDownloadThread extends Thread {
 	
 	private static final String GF_ROOT = "http://www.gamefaqs.com";
 	private static final String GF_SEARCH = "/search/index.html?game=";
-	//
-	private static final String GF_TITLE_PATTERN = "\\<td class=\"rtitle\"\\<";
+	
+	// patterns:
+	private static final String GF_BEST_MATCH_PATTERN = "Best Matches";
+	private static final String GF_ITEM_PATTERN = "\\<td class=\"rtitle\"\\>";
+	private static final String GF_TITLE_PATTERN = "(\\>)(.+)(\\<)/a\\>";
+	private static final String GF_URL_PATTERN = "(\"/)(.+)(/)(.+)(\")";
 
 	private Activity parentActivity;
 	private String query;
@@ -93,6 +99,7 @@ public class WebDownloadThread extends Thread {
 	
 	private String getCleanHTML() {
 		String cleanHTML = "";
+		int beginSection = 0, endSection = 0;
 		URL url;
 		BufferedInputStream inStream;
 		URLConnection connection;
@@ -114,26 +121,85 @@ public class WebDownloadThread extends Thread {
 			
 			//create string from bytes
 			String htmlTemp = new String(baf.buffer());
-			//TODO: pass through and consume all tabs and newlines
-			//then, use http://docs.oracle.com/javase/tutorial/essential/regex/test_harness.html
+			//TODO: use http://docs.oracle.com/javase/tutorial/essential/regex/test_harness.html
 			// to access desired data
 			
-			for(int i = 0; i < htmlTemp.length(); ++i) {
-				char currChar = htmlTemp.charAt(i);
-				if(currChar != '\n' && currChar != '\t') {
-					cleanHTML += currChar;
-				}
-				else {
-					/*
+			//Cut off the beginning of the html file string
+			Pattern bestMatchesPattern = Pattern.compile(GF_BEST_MATCH_PATTERN);
+			Matcher htmlMatcher = bestMatchesPattern.matcher(htmlTemp);
+			boolean foundBestMatches = false;
+			while (htmlMatcher.find()) {
+				final TextView message = new TextView(parentActivity);
+				message.setText("Found " + GF_BEST_MATCH_PATTERN + " at "
+				+ htmlMatcher.start() + " ending at " + htmlMatcher.end() 
+				+ "\nValue: " + htmlMatcher.group());
+				resultsView.post(new Runnable() {
+					public void run() {
+						resultsView.addView(message);
+					}
+				});
+				beginSection = htmlMatcher.start();
+				foundBestMatches = true;
+			}
+			if(!foundBestMatches) {
+				final TextView message = new TextView(parentActivity);
+				message.setText("Could not find " + GF_BEST_MATCH_PATTERN);
+				resultsView.post(new Runnable() {
+					public void run() {
+						resultsView.addView(message);
+					}
+				});
+			}
+			
+			//search through the items:
+			cleanHTML = htmlTemp.substring(beginSection);
+			Pattern itemsPattern = Pattern.compile(GF_ITEM_PATTERN);
+			Matcher itemsMatcher = itemsPattern.matcher(cleanHTML);
+			boolean foundItems = false;
+			while(itemsMatcher.find()) {
+				
+				String itemStart = cleanHTML.substring(itemsMatcher.start());
+				
+				
+				Pattern currentItemPattern = Pattern.compile(GF_TITLE_PATTERN);
+				Matcher currentItemMatcher = currentItemPattern.matcher(itemStart);
+				//find first instance of title:
+				if(currentItemMatcher.find()) {
+					
+					String itemSubString = itemStart.substring(0,currentItemMatcher.end());
 					final TextView message = new TextView(parentActivity);
-					message.setText("found " + currChar);
+					message.setText(itemSubString);
 					resultsView.post(new Runnable() {
 						public void run() {
 							resultsView.addView(message);
 						}
-					});*/
+					});
+					
+					/*
+					String faqsStart = itemStart.substring(currentItemsMatcher.start());
+					
+					Pattern currentFAQsPattern = Pattern.compile(GF_FAQ_URL_PATTERN);
+					Matcher currentFAQsMatcher = currentFAQsPattern.matcher(faqsStart);
+					*/
 				}
+				else
+				{
+					//could not find currentItem
+				}
+				
+				foundItems = true;
 			}
+			if(!foundItems) {
+				final TextView message = new TextView(parentActivity);
+				message.setText("Could not find " + GF_ITEM_PATTERN);
+				resultsView.post(new Runnable() {
+					public void run() {
+						resultsView.addView(message);
+					}
+				});
+			}
+			
+			
 			
 			final TextView message = new TextView(parentActivity);
 			message.setText("Successfully connected to gamefaqs.com!");
