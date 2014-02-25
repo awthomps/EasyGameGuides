@@ -30,6 +30,9 @@ public class DisplaySearchActivity extends Activity {
 	    
 	    // Set the text view as the activity layout
 	    searchLayout.addView(textView);
+	    
+	    Thread search = new WebDownloadThread(this, message, WebDownloadThread.GAME_NAME_SEARCH, searchLayout);
+	    search.start();
 	}
 
 	@Override

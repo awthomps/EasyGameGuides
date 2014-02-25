@@ -35,12 +35,13 @@ import android.widget.TextView;
 
 public class WebDownloadThread extends Thread {
 	
-	private static final int DL_BUFFER_LENGTH = 4096;
-	private static final int GAME_NAME_SEARCH = 0;
-	private static final int GUIDES_SEARCH = 1;
-	private static final String GF_ROOT = "http://www.gamefaqs.com/";
-	private static final String GF_SEARCH = "search/index.html?game=";
-	private static final String GF_TITLE_PATTERN = "<td class=\"rtitle\"\n<";
+	public static final int GAME_NAME_SEARCH = 0;
+	public  static final int GUIDES_SEARCH = 1;
+	
+	private static final String GF_ROOT = "http://www.gamefaqs.com";
+	private static final String GF_SEARCH = "/search/index.html?game=";
+	//
+	private static final String GF_TITLE_PATTERN = "\\<td class=\"rtitle\"\\<";
 
 	private Activity parentActivity;
 	private String query;
@@ -70,31 +71,34 @@ public class WebDownloadThread extends Thread {
 		else if(type == GUIDES_SEARCH) {
 			
 		}
-		URL url;
-		URLConnection connection;
-		int fileLength;
-		String fileName;
-		BufferedInputStream inStream;
-		BufferedOutputStream outStream;
-		File outFile;
-		FileOutputStream fileStream;
-		Message msg;
 	}
 	
 	public void searchGameName() {
-		URL url;
-		URLConnection connection;
+		
 		int fileLength;
 		String fileName;
-		String htmlContents;
-		BufferedInputStream inStream;
+		String htmlContents = "";
 		BufferedOutputStream outStream;
 		File outFile;
 		FileOutputStream fileStream;
 		Message msg;
 		
+		htmlContents = getCleanHTML();
+		
+		//make sure that there was a success, otherwise just return
+		//since error has already been reported.
+		if(htmlContents.equals("FAILURE")) { return; }
+		
+	}
+	
+	private String getCleanHTML() {
+		String cleanHTML = "";
+		URL url;
+		BufferedInputStream inStream;
+		URLConnection connection;
 		try {
-			url = new URL(GF_ROOT + GF_SEARCH + query);
+			String urlString = GF_ROOT + GF_SEARCH + query;
+			url = new URL(urlString);
 			connection = url.openConnection();
 			connection.setUseCaches(false);
 			
@@ -109,27 +113,60 @@ public class WebDownloadThread extends Thread {
 			}
 			
 			//create string from bytes
-			htmlContents = new String(baf.buffer());
+			String htmlTemp = new String(baf.buffer());
 			//TODO: pass through and consume all tabs and newlines
 			//then, use http://docs.oracle.com/javase/tutorial/essential/regex/test_harness.html
 			// to access desired data
 			
+			for(int i = 0; i < htmlTemp.length(); ++i) {
+				char currChar = htmlTemp.charAt(i);
+				if(currChar != '\n' && currChar != '\t') {
+					cleanHTML += currChar;
+				}
+				else {
+					/*
+					final TextView message = new TextView(parentActivity);
+					message.setText("found " + currChar);
+					resultsView.post(new Runnable() {
+						public void run() {
+							resultsView.addView(message);
+						}
+					});*/
+				}
+			}
+			
+			final TextView message = new TextView(parentActivity);
+			message.setText("Successfully connected to gamefaqs.com!");
+			resultsView.post(new Runnable() {
+				public void run() {
+					resultsView.addView(message);
+				}
+			});
 			
 			
 		} catch (MalformedURLException e) {
-			TextView error = new TextView(parentActivity);
+			final TextView error = new TextView(parentActivity);
 			error.setText("This URL was malformed! Please contact support!");
-			resultsView.addView(error);
+			resultsView.post(new Runnable() {
+				public void run() {
+					resultsView.addView(error);
+				}
+			});
+			
 			e.printStackTrace();
-			return;
+			return "FAILURE";
 		} catch (IOException e) {
-			TextView error = new TextView(parentActivity);
+			final TextView error = new TextView(parentActivity);
 			error.setText("Could not make a connection! Are you online?");
-			resultsView.addView(error);
+			resultsView.post(new Runnable() {
+				public void run() {
+					resultsView.addView(error);
+				}
+			});
 			e.printStackTrace();
-			return;
+			return "FAILURE";
 		}
-		
+		return cleanHTML;
 	}
 	
 }

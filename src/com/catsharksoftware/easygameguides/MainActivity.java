@@ -5,6 +5,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.view.Menu;
 import android.view.View;
+import android.widget.EditText;
+
 import com.catsharksoftware.easygameguides.R;
 
 
@@ -28,7 +30,7 @@ public class MainActivity extends Activity {
 	}
 	
 	/** Called when the user clicks the 'Search' button */
-	/* Comment out search button since search does nothing
+
 	public void submitSearch(View view) {
 	    
 	    EditText editText = (EditText) findViewById(R.id.edit_message);
@@ -47,7 +49,7 @@ public class MainActivity extends Activity {
 		    startActivity(intent);
 	    }
 	}
-	*/
+
 	
 	public void openSavedGuides(View view) {
 		Intent intent = new Intent(this, SavedGuidesActivity.class);
