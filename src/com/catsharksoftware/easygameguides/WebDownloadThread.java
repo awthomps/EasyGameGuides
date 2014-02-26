@@ -16,6 +16,7 @@ import org.apache.http.util.ByteArrayBuffer;
 import android.app.Activity;
 import android.os.Message;
 import android.view.Gravity;
+import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -51,7 +52,7 @@ public class WebDownloadThread extends Thread {
 	private static final String GF_TITLE_PATTERN = "(\\>)(.+)(\\<)/a\\>";
 	private static final String GF_ITEM_URL_PATTERN = "(\"/)(.+)(/)(.+)(\")";
 	private static final String GF_ITEM_PLATFORM_PATTERN = "(/)(.+)(/)";
-	private static final String GF_FAQ_URL_PATTERN = "(/faqs/)([0-9]+)";
+	private static final String GF_FAQ_URL_PATTERN = "(/faqs/)(\\d+)";
 	
 	private static final int GF_BEGIN_TITLE_OFFSET = 1;
 	private static final int GF_END_TITLE_OFFSET = 4;
@@ -84,21 +85,96 @@ public class WebDownloadThread extends Thread {
 			searchGameName();
 		}
 		else if(type == GUIDES_SEARCH) {
-			
+			displayGuidesFromTitle();
 		}
 	}
 	
+	private void displayGuidesFromTitle() {
+		String cleanHTML = "";
+		URL url;
+		BufferedInputStream inStream;
+		URLConnection connection;
+		
+		
+		try {
+			String urlString = query;
+			url = new URL(urlString);
+			connection = url.openConnection();
+			connection.setUseCaches(false);
+			
+			// define input stream to read from the URLConnection
+			inStream = new BufferedInputStream((connection.getInputStream()));
+			
+			//read bytes to the buffer until there is no more to add;
+			ByteArrayBuffer baf = new ByteArrayBuffer(50);
+			int currentByte = 0;
+			while((currentByte = inStream.read()) != -1) {
+				baf.append((byte) currentByte);
+			}
+			
+			//create string from bytes
+			String htmlTemp = new String(baf.buffer());
+			
+			
+			//find all of the text guides:
+			Pattern guidesPattern = Pattern.compile(GF_FAQ_URL_PATTERN);
+			Matcher guidesMatcher = guidesPattern.matcher(htmlTemp);
+			boolean foundGuides = false;
+			while (guidesMatcher.find()) {
+				final Button guide = new Button(parentActivity);
+				guide.setText(guidesMatcher.group());
+				guide.setOnClickListener(new View.OnClickListener() {
+					public void onClick(View v) {
+						//TODO: implement what happens when this is clicked
+						//get data from the regex where the url of the guide is!
+					}
+
+				});
+				//add the button of the guide to the view
+				resultsView.post(new Runnable() {
+					public void run() {
+						resultsView.addView(guide);
+					}
+				});
+				foundGuides = true;
+			}
+			if(!foundGuides) {
+				final TextView message = new TextView(parentActivity);
+				message.setText("Sorry, there seems to be no guides for this game!");
+				resultsView.post(new Runnable() {
+					public void run() {
+						resultsView.addView(message);
+					}
+				});
+			}
+			
+		} catch (MalformedURLException e) {
+			final TextView error = new TextView(parentActivity);
+			error.setText("This URL was malformed! Please contact support!");
+			resultsView.post(new Runnable() {
+				public void run() {
+					resultsView.addView(error);
+				}
+			});
+			
+			e.printStackTrace();
+			return;
+		} catch (IOException e) {
+			final TextView error = new TextView(parentActivity);
+			error.setText("Could not make a connection! Are you online?");
+			resultsView.post(new Runnable() {
+				public void run() {
+					resultsView.addView(error);
+				}
+			});
+			e.printStackTrace();
+			return;
+		}
+	}
+
 	public void searchGameName() {
-		
-		int fileLength;
-		String fileName;
 		String htmlContents = "";
-		BufferedOutputStream outStream;
-		File outFile;
-		FileOutputStream fileStream;
-		Message msg;
-		
-		htmlContents = getCleanHTML();
+		htmlContents = performGameNameSearch();
 		
 		//make sure that there was a success, otherwise just return
 		//since error has already been reported.
@@ -106,9 +182,9 @@ public class WebDownloadThread extends Thread {
 		
 	}
 	
-	private String getCleanHTML() {
+	private String performGameNameSearch() {
 		String cleanHTML = "";
-		int beginSection = 0, endSection = 0;
+		int beginSection = 0;
 		URL url;
 		BufferedInputStream inStream;
 		URLConnection connection;
@@ -135,9 +211,10 @@ public class WebDownloadThread extends Thread {
 			// to access desired data
 			
 			//Cut off the beginning of the html file string
-			Pattern bestMatchesPattern = Pattern.compile(GF_BEST_MATCH_PATTERN);
+			Pattern bestMatchesPattern = Pattern.compile(GF_FAQ_URL_PATTERN);
 			Matcher htmlMatcher = bestMatchesPattern.matcher(htmlTemp);
 			boolean foundBestMatches = false;
+			/*
 			while (htmlMatcher.find()) {
 				final TextView message = new TextView(parentActivity);
 				message.setText(GF_BEST_MATCH_PATTERN + ":");
@@ -157,7 +234,7 @@ public class WebDownloadThread extends Thread {
 						resultsView.addView(message);
 					}
 				});
-			}
+			}*/
 			
 			//search through the items:
 			cleanHTML = htmlTemp.substring(beginSection);
@@ -194,10 +271,69 @@ public class WebDownloadThread extends Thread {
 						platform = currentItemPlatformMatcher.group().substring(1,currentItemPlatformMatcher.group().length()-1);
 					}
 					
-					
+					//set up the button for this game title
+					final String resultsForText = "Guides for \"" + itemName + "\"\n<platform:" + platform +">:";
 					final Button titleButton = new Button(parentActivity);
+					final String buttonTitleURL = titleURL;
 					titleButton.setText(itemName + "\n<platform:" + platform +">");
 					titleButton.setGravity(Gravity.LEFT);
+					titleButton.setOnClickListener(new View.OnClickListener() {
+						public void onClick(View v) {
+							//clear the views for the guides:
+							resultsView.post(new Runnable() { 
+								public void run() {
+									//clear the views for the search query
+									resultsView.removeAllViews();
+								}
+							});
+							
+							//create a way to go back and re-query:
+							final Button backButton = new Button(parentActivity);
+							backButton.setText("Back to search.");
+							backButton.setOnClickListener(new View.OnClickListener() {
+								public void onClick(View v) {
+									String prefix = "Results for: ";
+									final TextView resultsForView = new TextView(parentActivity);
+									resultsForView.setTextSize(16);
+									resultsForView.setText(prefix + "\"" + query + "\":");
+								    resultsView.post(new Runnable() { 
+										public void run() {
+											//clear the views for the search query
+											resultsView.removeAllViews();
+											resultsView.addView(resultsForView);
+										}
+									});
+									
+									Thread homeThread = new WebDownloadThread(parentActivity, query, GAME_NAME_SEARCH, resultsView);
+									homeThread.start();
+								}
+								
+							});
+							resultsView.post(new Runnable() { 
+								public void run() {
+									//clear the views for the search query
+									resultsView.addView(backButton);
+								}
+							});
+							
+							//remind user what the results are for:
+							final TextView titleView = new TextView(parentActivity);
+							titleView.setTextSize(16);
+							titleView.setText(resultsForText);
+							resultsView.post(new Runnable() { 
+								public void run() {
+									resultsView.addView(titleView);
+								}
+							});
+							
+							Thread currentGuides = new WebDownloadThread(parentActivity, GF_ROOT + buttonTitleURL + "/faqs", GUIDES_SEARCH, resultsView);
+							currentGuides.start();
+						}
+					});
+					
+					//Thread search = new WebDownloadThread(this, message, WebDownloadThread.GAME_NAME_SEARCH, searchLayout);
+					//search.start();
+					
 					resultsView.post(new Runnable() {
 						public void run() {
 							resultsView.addView(titleButton);
