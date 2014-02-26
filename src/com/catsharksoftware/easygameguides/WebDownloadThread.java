@@ -15,6 +15,8 @@ import org.apache.http.util.ByteArrayBuffer;
 
 import android.app.Activity;
 import android.os.Message;
+import android.view.Gravity;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -47,7 +49,13 @@ public class WebDownloadThread extends Thread {
 	private static final String GF_BEST_MATCH_PATTERN = "Best Matches";
 	private static final String GF_ITEM_PATTERN = "\\<td class=\"rtitle\"\\>";
 	private static final String GF_TITLE_PATTERN = "(\\>)(.+)(\\<)/a\\>";
-	private static final String GF_URL_PATTERN = "(\"/)(.+)(/)(.+)(\")";
+	private static final String GF_ITEM_URL_PATTERN = "(\"/)(.+)(/)(.+)(\")";
+	private static final String GF_ITEM_PLATFORM_PATTERN = "(/)(.+)(/)";
+	private static final String GF_FAQ_URL_PATTERN = "(/faqs/)([0-9]+)";
+	
+	private static final int GF_BEGIN_TITLE_OFFSET = 1;
+	private static final int GF_END_TITLE_OFFSET = 4;
+	private static final int GF_BEGIN_FAQ_NUM_OFFSET = 6;
 
 	private Activity parentActivity;
 	private String query;
@@ -63,7 +71,8 @@ public class WebDownloadThread extends Thread {
 		this.query = "";
 		resultsView = desiredView;
 		if(query != null) {
-			this.query = query;
+			//parse unwanted values:
+			this.query = query.replace(' ', '-');
 		}
 		this.type = type;
 		this.parentActivity = parentActivity;
@@ -103,6 +112,7 @@ public class WebDownloadThread extends Thread {
 		URL url;
 		BufferedInputStream inStream;
 		URLConnection connection;
+		
 		try {
 			String urlString = GF_ROOT + GF_SEARCH + query;
 			url = new URL(urlString);
@@ -130,9 +140,7 @@ public class WebDownloadThread extends Thread {
 			boolean foundBestMatches = false;
 			while (htmlMatcher.find()) {
 				final TextView message = new TextView(parentActivity);
-				message.setText("Found " + GF_BEST_MATCH_PATTERN + " at "
-				+ htmlMatcher.start() + " ending at " + htmlMatcher.end() 
-				+ "\nValue: " + htmlMatcher.group());
+				message.setText(GF_BEST_MATCH_PATTERN + ":");
 				resultsView.post(new Runnable() {
 					public void run() {
 						resultsView.addView(message);
@@ -143,7 +151,7 @@ public class WebDownloadThread extends Thread {
 			}
 			if(!foundBestMatches) {
 				final TextView message = new TextView(parentActivity);
-				message.setText("Could not find " + GF_BEST_MATCH_PATTERN);
+				message.setText("Results not found! Try another search.");
 				resultsView.post(new Runnable() {
 					public void run() {
 						resultsView.addView(message);
@@ -165,15 +173,37 @@ public class WebDownloadThread extends Thread {
 				Matcher currentItemMatcher = currentItemPattern.matcher(itemStart);
 				//find first instance of title:
 				if(currentItemMatcher.find()) {
-					
+					String platform = "";
+					String titleURL = "";
+					String itemName = currentItemMatcher.group().substring(GF_BEGIN_TITLE_OFFSET, 
+							currentItemMatcher.group().length() - GF_END_TITLE_OFFSET);
 					String itemSubString = itemStart.substring(0,currentItemMatcher.end());
-					final TextView message = new TextView(parentActivity);
-					message.setText(itemSubString);
+					
+					//find url:
+					Pattern currentItemURLPattern = Pattern.compile(GF_ITEM_URL_PATTERN);
+					Matcher currentItemURLMatcher = currentItemURLPattern.matcher(itemSubString);
+					if(currentItemURLMatcher.find()) {
+						//get the url and remove the quotations:
+						titleURL = currentItemURLMatcher.group().substring(1,currentItemURLMatcher.group().length()-1);
+					}
+					//find platform (first part of url):
+					Pattern currentItemPlatformPattern = Pattern.compile(GF_ITEM_PLATFORM_PATTERN);
+					Matcher currentItemPlatformMatcher = currentItemPlatformPattern.matcher(titleURL);
+					if(currentItemPlatformMatcher.find()) {
+						//get the platform and remove the quotations from it:
+						platform = currentItemPlatformMatcher.group().substring(1,currentItemPlatformMatcher.group().length()-1);
+					}
+					
+					
+					final Button titleButton = new Button(parentActivity);
+					titleButton.setText(itemName + "\n<platform:" + platform +">");
+					titleButton.setGravity(Gravity.LEFT);
 					resultsView.post(new Runnable() {
 						public void run() {
-							resultsView.addView(message);
+							resultsView.addView(titleButton);
 						}
 					});
+					
 					
 					/*
 					String faqsStart = itemStart.substring(currentItemsMatcher.start());
@@ -190,24 +220,25 @@ public class WebDownloadThread extends Thread {
 				foundItems = true;
 			}
 			if(!foundItems) {
+				/*
 				final TextView message = new TextView(parentActivity);
 				message.setText("Could not find " + GF_ITEM_PATTERN);
 				resultsView.post(new Runnable() {
 					public void run() {
 						resultsView.addView(message);
 					}
-				});
+				});*/
 			}
 			
 			
-			
+			/*
 			final TextView message = new TextView(parentActivity);
 			message.setText("Successfully connected to gamefaqs.com!");
 			resultsView.post(new Runnable() {
 				public void run() {
 					resultsView.addView(message);
 				}
-			});
+			});*/
 			
 			
 		} catch (MalformedURLException e) {
