@@ -9,6 +9,7 @@ import android.widget.TextView;
 import com.catsharksoftware.easygameguides.R;
 
 public class DisplaySearchActivity extends Activity {
+	public final static String ONLINE_GUIDE_URL = "com.catsharksoftware.easygameguides.URL";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

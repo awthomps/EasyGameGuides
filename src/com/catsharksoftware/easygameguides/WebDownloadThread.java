@@ -13,10 +13,15 @@ import java.util.regex.Pattern;
 
 import org.apache.http.util.ByteArrayBuffer;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Message;
 import android.view.Gravity;
 import android.view.View;
+import android.view.Window;
+import android.webkit.WebChromeClient;
+import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -41,7 +46,8 @@ import android.widget.TextView;
 public class WebDownloadThread extends Thread {
 	
 	public static final int GAME_NAME_SEARCH = 0;
-	public  static final int GUIDES_SEARCH = 1;
+	public static final int GUIDES_SEARCH = 1;
+	public static final int ONLINE_GUIDE_DISPLAY = 2;
 	
 	private static final String GF_ROOT = "http://www.gamefaqs.com";
 	private static final String GF_SEARCH = "/search/index.html?game=";
@@ -57,6 +63,9 @@ public class WebDownloadThread extends Thread {
 	private static final int GF_BEGIN_TITLE_OFFSET = 1;
 	private static final int GF_END_TITLE_OFFSET = 4;
 	private static final int GF_BEGIN_FAQ_NUM_OFFSET = 6;
+	private static final int GF_REMOVE_FAQ_FROM_URL = 5;
+	
+	private static final String MIME_TEXT_HTML = "text/html";
 
 	private Activity parentActivity;
 	private String query;
@@ -87,8 +96,96 @@ public class WebDownloadThread extends Thread {
 		else if(type == GUIDES_SEARCH) {
 			displayGuidesFromTitle();
 		}
+		else if(type == ONLINE_GUIDE_DISPLAY) {
+			displayOnlineGuide();
+		}
 	}
 	
+	@SuppressLint("SetJavaScriptEnabled")
+	private void displayOnlineGuide() {
+		String htmlData = "";
+		URL url;
+		BufferedInputStream inStream;
+		URLConnection connection;
+		
+		try {
+			String urlString = query;
+			url = new URL(urlString);
+			connection = url.openConnection();
+			connection.setUseCaches(false);
+			
+			// define input stream to read from the URLConnection
+			inStream = new BufferedInputStream((connection.getInputStream()));
+			
+			//read bytes to the buffer until there is no more to add;
+			ByteArrayBuffer baf = new ByteArrayBuffer(50);
+			int currentByte = 0;
+			while((currentByte = inStream.read()) != -1) {
+				baf.append((byte) currentByte);
+			}
+			
+			//create string from bytes
+			String htmlTemp = new String(baf.buffer());
+			
+			//final WebView guideDisplayView = (WebView) parentActivity.findViewById(R.id.online_guide_view);
+			//allow for javascript execution
+			//guideDisplayView.post(new Runnable() {
+			resultsView.post(new Runnable() {
+				
+				//TODO: figure out why this displays nothing!
+				public void run() {
+					WebView guideDisplayView = new WebView(parentActivity);
+					guideDisplayView.getSettings().setJavaScriptEnabled(true);
+					guideDisplayView.loadUrl("\"" + query + "\"");
+					resultsView.addView(guideDisplayView);
+					guideDisplayView.requestLayout();
+					resultsView.requestLayout();
+					resultsView.getParent().requestLayout();
+				}
+			});
+			resultsView.post(new Runnable() {
+				public void run() {
+					
+				}
+			});
+			
+			/*guideDisplayView.setWebChromeClient(new WebChromeClient() {
+				public void onProgressChanged(WebView view, int progress) {
+					parentActivity.setProgress(progress * 1000);
+				}
+			});*/
+			
+			/*resultsView.post(new Runnable() {
+				public void run() {
+					resultsView.addView(guideDisplayView);
+				}
+			});*/
+			
+			
+		} catch (MalformedURLException e) {
+			final TextView error = new TextView(parentActivity);
+			error.setText("This URL was malformed! Please contact support!");
+			resultsView.post(new Runnable() {
+				public void run() {
+					resultsView.addView(error);
+				}
+			});
+			
+			e.printStackTrace();
+			return;
+		} catch (IOException e) {
+			final TextView error = new TextView(parentActivity);
+			error.setText("Could not make a connection! Are you online?");
+			resultsView.post(new Runnable() {
+				public void run() {
+					resultsView.addView(error);
+				}
+			});
+			e.printStackTrace();
+			return;
+		}
+	}
+
 	private void displayGuidesFromTitle() {
 		String cleanHTML = "";
 		URL url;
@@ -121,12 +218,16 @@ public class WebDownloadThread extends Thread {
 			Matcher guidesMatcher = guidesPattern.matcher(htmlTemp);
 			boolean foundGuides = false;
 			while (guidesMatcher.find()) {
+				final String onlineGuideURL = urlString.substring(0,urlString.length() - GF_REMOVE_FAQ_FROM_URL) + guidesMatcher.group();
 				final Button guide = new Button(parentActivity);
 				guide.setText(guidesMatcher.group());
 				guide.setOnClickListener(new View.OnClickListener() {
 					public void onClick(View v) {
 						//TODO: implement what happens when this is clicked
 						//get data from the regex where the url of the guide is!
+						Intent intent = new Intent(parentActivity, DisplayOnlineGuideActivity.class);
+					    intent.putExtra(DisplaySearchActivity.ONLINE_GUIDE_URL, onlineGuideURL);
+					    parentActivity.startActivity(intent);
 					}
 
 				});

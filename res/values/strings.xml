@@ -40,5 +40,7 @@
     <string name="title_activity_about">About Activity</string>
     <string name="get_to_about">About this App</string>
     <string name="title_activity_receive_file">Receive File</string>
+    <string name="title_activity_display_online_guide">Display Online Guide</string>
+    <string name="title_activity_display_onlline_guide">DisplayOnllineGuideActivity</string>
 
 </resources>
