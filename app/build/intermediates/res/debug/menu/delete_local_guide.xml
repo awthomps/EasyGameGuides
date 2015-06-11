@@ -1,0 +1,9 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/action_settings"/>
+
+</menu><!-- From: file:/C:/Users/AlphaSocks/Documents/dev/android/EasyGameGuides/app/src/main/res/menu/delete_local_guide.xml -->
