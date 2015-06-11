@@ -136,7 +136,7 @@ public class WebDownloadThread extends Thread {
 				public void run() {
 					WebView guideDisplayView = new WebView(parentActivity);
 					guideDisplayView.getSettings().setJavaScriptEnabled(true);
-					guideDisplayView.loadUrl("\"" + query + "\"");
+					guideDisplayView.loadUrl(query);
 					resultsView.addView(guideDisplayView);
 					guideDisplayView.requestLayout();
 					resultsView.requestLayout();
