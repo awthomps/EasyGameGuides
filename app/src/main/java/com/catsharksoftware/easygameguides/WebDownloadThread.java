@@ -59,7 +59,9 @@ public class WebDownloadThread extends Thread {
 	private static final String GF_ITEM_URL_PATTERN = "(\"/)(.+)(/)(.+)(\")";
 	private static final String GF_ITEM_PLATFORM_PATTERN = "(/)(.+)(/)";
 	private static final String GF_FAQ_URL_PATTERN = "(/faqs/)(\\d+)";
-	
+	private static final String GF_FAQ_SPAN_BEGIN_A = "\\<span id=\"faqspan-";
+	private static final String GF_FAQ_SPAN_BEGIN_B = "\"\\>";
+	private static final String GF_FAQ_SPAN_END = "\\<\\span\\>";
 	private static final int GF_BEGIN_TITLE_OFFSET = 1;
 	private static final int GF_END_TITLE_OFFSET = 4;
 	private static final int GF_BEGIN_FAQ_NUM_OFFSET = 6;
@@ -100,7 +102,68 @@ public class WebDownloadThread extends Thread {
 			displayOnlineGuide();
 		}
 	}
-	
+
+
+	private void downloadGuideToTextFile() {
+		String htmlData = "";
+		URL url;
+		BufferedInputStream inStream;
+		URLConnection connection;
+
+		try {
+			String urlString = query;
+			url = new URL(urlString);
+			connection = url.openConnection();
+			connection.setUseCaches(false);
+
+			// define input stream to read from the URLConnection
+			inStream = new BufferedInputStream((connection.getInputStream()));
+
+			//read bytes to the buffer until there is no more to add;
+			ByteArrayBuffer baf = new ByteArrayBuffer(50);
+			int currentByte = 0;
+			while((currentByte = inStream.read()) != -1) {
+				baf.append((byte) currentByte);
+			}
+
+			//create string from bytes
+			String htmlTemp = new String(baf.buffer());
+
+			String cleanedText = "";
+			int i = 1;
+			while(htmlTemp.contains(GF_FAQ_SPAN_BEGIN_A + i + GF_FAQ_SPAN_BEGIN_B)) {
+				/*
+				TODO: USE REGEX TO PARSE OUT ALL THE 'IMPORTANT' TEXT FROM THE ONLINE GUIDE AND THEN SAVE IT TO A TEXT FILE.
+
+				 */
+			}
+
+
+		} catch (MalformedURLException e) {
+			final TextView error = new TextView(parentActivity);
+			error.setText("This URL was malformed! Please contact support!");
+			resultsView.post(new Runnable() {
+				public void run() {
+					resultsView.addView(error);
+				}
+			});
+
+			e.printStackTrace();
+			return;
+		} catch (IOException e) {
+			final TextView error = new TextView(parentActivity);
+			error.setText("Could not make a connection! Are you online?");
+			resultsView.post(new Runnable() {
+				public void run() {
+					resultsView.addView(error);
+				}
+			});
+			e.printStackTrace();
+			return;
+		}
+	}
+
+
 	@SuppressLint("SetJavaScriptEnabled")
 	private void displayOnlineGuide() {
 		String htmlData = "";

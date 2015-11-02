@@ -63,4 +63,9 @@ public class DisplayOnlineGuideActivity extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 
+	private boolean downloadGuide(String url) {
+		//GUIDES IN HTML ARE IN THE FORM faqspan-1 - faqspan-n
+		return true;
+	}
+
 }
