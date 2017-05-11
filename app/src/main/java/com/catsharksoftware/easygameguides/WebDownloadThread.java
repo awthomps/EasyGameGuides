@@ -49,7 +49,7 @@ public class WebDownloadThread extends Thread {
 	public static final int GUIDES_SEARCH = 1;
 	public static final int ONLINE_GUIDE_DISPLAY = 2;
 	
-	private static final String GF_ROOT = "http://www.gamefaqs.com";
+	private static final String GF_ROOT = "https://www.gamefaqs.com";
 	private static final String GF_SEARCH = "/search/index.html?game=";
 	
 	// patterns:

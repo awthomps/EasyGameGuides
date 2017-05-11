@@ -1,5 +1,7 @@
 package com.catsharksoftware.easygameguides;
 
+import android.content.ContentProvider;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
@@ -13,7 +15,11 @@ import com.catsharksoftware.easygameguides.R;
 public class MainActivity extends Activity {
 	public final static String EXTRA_MESSAGE = "com.catsharksoftware.easygameguides.MESSAGE";
 	public final static String EasyGGFile = "EasyGG";
-	
+
+	private String QUERY_STRING_KEY = "queryStringKey";
+
+	private String queryString = "";
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -37,17 +43,36 @@ public class MainActivity extends Activity {
 	    
 	    String message = editText.getText().toString();
 	    
-	    if(message.equals("") || message.equals(null))
+	    if(message == null || message.equals(""))
 	    {
 	    	String error = "Please enter non-empty search query.";
 	    	editText.setHint(error);
 	    }
 	    else
 	    {
+			queryString = message;
 	    	Intent intent = new Intent(this, DisplaySearchActivity.class);
 		    intent.putExtra(EXTRA_MESSAGE, message);
 		    startActivity(intent);
 	    }
+	}
+
+	public void onPause() {
+		super.onPause();
+		SharedPreferences mainActivityData = getPreferences(MODE_PRIVATE);
+		SharedPreferences.Editor editor = mainActivityData.edit();
+		editor.putString(QUERY_STRING_KEY, queryString);
+
+		//commit
+		editor.commit();
+	}
+
+	public void onResume() {
+		super.onResume();
+		SharedPreferences mainActivityData = getPreferences(MODE_PRIVATE);
+		queryString = mainActivityData.getString(QUERY_STRING_KEY, "");
+		EditText editText = (EditText) findViewById(R.id.edit_message);
+		editText.setText(queryString);
 	}
 
 	

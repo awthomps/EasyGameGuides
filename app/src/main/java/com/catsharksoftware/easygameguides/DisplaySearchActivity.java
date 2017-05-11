@@ -15,23 +15,23 @@ public class DisplaySearchActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_display_search);
-		
+
 		LinearLayout searchLayout = (LinearLayout) findViewById(R.id.search_layout);
-		
+
 		String prefix = "Results for: ";
-		
+
 		// Get the message from the intent
 		Intent intent = getIntent();
 	    String message = intent.getStringExtra(MainActivity.EXTRA_MESSAGE);
-	    
+
 	    // Create the text view
 	    TextView textView = new TextView(this);
 	    textView.setTextSize(16);
 	    textView.setText(prefix + "\"" + message + "\":");
-	    
+
 	    // Set the text view as the activity layout
 	    searchLayout.addView(textView);
-	    
+
 	    Thread search = new WebDownloadThread(this, message, WebDownloadThread.GAME_NAME_SEARCH, searchLayout);
 	    search.start();
 	}
